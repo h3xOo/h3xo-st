@@ -24,6 +24,9 @@ pkgver() {
 
 prepare() {
 	cd $srcdir/${_pkgname}
+    echo "CPPFLAGS+=${CPPFLAGS}" >> config.mk
+	echo "CFLAGS+=${CFLAGS}" >> config.mk
+	echo "LDFLAGS+=${LDFLAGS}" >> config.mk
 	# skip terminfo which conflicts with ncurses
 	sed -i '/tic /d' Makefile
 }
