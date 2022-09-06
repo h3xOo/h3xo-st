@@ -14,6 +14,7 @@ options:
 	@echo "CFLAGS  = $(STCFLAGS)"
 	@echo "LDFLAGS = $(STLDFLAGS)"
 	@echo "CC      = $(CC)"
+	@echo ""
 
 .c.o:
 	$(CC) $(STCFLAGS) -c $<
