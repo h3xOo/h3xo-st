@@ -12,6 +12,7 @@ all: options st
 options:
 	@echo st build options:
 	@echo "CFLAGS  = $(STCFLAGS)"
+	@echo "CFLAGS  = $(CFLAGS)"
 	@echo "LDFLAGS = $(STLDFLAGS)"
 	@echo "CC      = $(CC)"
 	@echo ""
