@@ -122,10 +122,12 @@ float alphaUnfocus;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
+
     /*
-     * default gruvbox colors
-     * uncomment those and comment dracula if wanted
+     * Gruvbox default colors
      */
+
+    /* 8 normal colors */
 	// "#282828", /* hard contrast: #1d2021 / soft contrast: #32302f */
 	// "#cc241d",
 	// "#98971a",
@@ -135,6 +137,8 @@ static const char *colorname[] = {
 	// "#689d6a",
 	// "#a89984",
 	// "#928374",
+
+    /* 8 bright colors */
 	// "#fb4934",
 	// "#b8bb26",
 	// "#fabd2f",
@@ -167,9 +171,16 @@ static const char *colorname[] = {
     "#8be9fd", /* cyan    */
     "#ffffff", /* white   */
 	[255] = 0,
+
 	/* more colors can be added after 255 to use with DefaultXX */
 	"#add8e6", /* 256 -> cursor */
 	"#555555", /* 257 -> rev cursor*/
+
+    /* Gruvbox */
+    // "#282828", /* 258 -> bg */
+	// "#ebdbb2", /* 259 -> fg */
+
+    /* Dracula */
 	"#282a36", /* 258 -> bg */
 	"#f8f8f2", /* 259 -> fg */
 };
