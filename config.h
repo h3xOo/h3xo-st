@@ -18,7 +18,7 @@ static int borderpx = 10;
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
  */
-static char *shell = "/usr/bin/zsh";
+static char *shell = "/bin/sh";
 char *utmp = NULL;
 /* scroll program: to enable use a string like "scroll" */
 char *scroll = NULL;
@@ -128,48 +128,48 @@ static const char *colorname[] = {
      */
 
     /* 8 normal colors */
-	// "#282828", /* hard contrast: #1d2021 / soft contrast: #32302f */
-	// "#cc241d",
-	// "#98971a",
-	// "#d79921",
-	// "#458588",
-	// "#b16286",
-	// "#689d6a",
-	// "#a89984",
-	// "#928374",
+	"#282828", /* hard contrast: #1d2021 / soft contrast: #32302f */
+	"#cc241d",
+	"#98971a",
+	"#d79921",
+	"#458588",
+	"#b16286",
+	"#689d6a",
+	"#a89984",
+	"#928374",
 
     /* 8 bright colors */
-	// "#fb4934",
-	// "#b8bb26",
-	// "#fabd2f",
-	// "#83a598",
-	// "#d3869b",
-	// "#8ec07c",
-	// "#ebdbb2",
+	"#fb4934",
+	"#b8bb26",
+	"#fabd2f",
+	"#83a598",
+	"#d3869b",
+	"#8ec07c",
+	"#ebdbb2",
 
     /*
      * Beginning of Dracula colors
      */
 
     /* 8 normal colors */
-    "#000000", /* black   */
-    "#ff5555", /* red     */
-    "#50fa7b", /* green   */
-    "#f1fa8c", /* yellow  */
-    "#bd93f9", /* blue    */
-    "#ff79c6", /* magenta */
-    "#8be9fd", /* cyan    */
-    "#bbbbbb", /* white   */
+    // "#000000", /* black   */
+    // "#ff5555", /* red     */
+    // "#50fa7b", /* green   */
+    // "#f1fa8c", /* yellow  */
+    // "#bd93f9", /* blue    */
+    // "#ff79c6", /* magenta */
+    // "#8be9fd", /* cyan    */
+    // "#bbbbbb", /* white   */
 
-    /* 8 bright colors */
-    "#44475a", /* black   */
-    "#ff5555", /* red     */
-    "#50fa7b", /* green   */
-    "#f1fa8c", /* yellow  */
-    "#bd93f9", /* blue    */
-    "#ff79c6", /* magenta */
-    "#8be9fd", /* cyan    */
-    "#ffffff", /* white   */
+    // /* 8 bright colors */
+    // "#44475a", /* black   */
+    // "#ff5555", /* red     */
+    // "#50fa7b", /* green   */
+    // "#f1fa8c", /* yellow  */
+    // "#bd93f9", /* blue    */
+    // "#ff79c6", /* magenta */
+    // "#8be9fd", /* cyan    */
+    // "#ffffff", /* white   */
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
@@ -177,12 +177,12 @@ static const char *colorname[] = {
 	"#555555", /* 257 -> rev cursor*/
 
     /* Gruvbox */
-    // "#282828", /* 258 -> bg */
-	// "#ebdbb2", /* 259 -> fg */
+    "#282828", /* 258 -> bg */
+	"#ebdbb2", /* 259 -> fg */
 
     /* Dracula */
-	"#282a36", /* 258 -> bg */
-	"#f8f8f2", /* 259 -> fg */
+	// "#282a36", /* 258 -> bg */
+	// "#f8f8f2", /* 259 -> fg */
 };
 
 unsigned int defaultitalic = 7;
