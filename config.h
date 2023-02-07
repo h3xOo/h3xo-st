@@ -5,8 +5,12 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
+
+#ifndef CONFIG_H__
+#define CONFIG_H__
+
 static char *font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
-/* static char *font = "Fira Code:pixelsize=20:antialias=true:autohint=true"; */
+//static char *font = "Fira Code:pixelsize=20:antialias=true:autohint=true";
 static char *font2[] = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
 static int borderpx = 10;
 
@@ -108,13 +112,13 @@ char *termname = "st-256color";
 unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.85;
-float alphaOffset = -0.05;
-float alphaUnfocus;
+// float alpha = 0.85;
+// float alphaOffset = -0.05;
+// float alphaUnfocus;
 
-//float alpha = 1.0;
-//float alphaOffset;
-//float alphaUnfocus;
+float alpha = 1.0;
+float alphaOffset;
+float alphaUnfocus;
 
 // float alpha = 0.8;
 // float alphaOffset = -0.05;
@@ -161,7 +165,7 @@ static const char *colorname[] = {
     // "#8be9fd", /* cyan    */
     // "#bbbbbb", /* white   */
 
-    // /* 8 bright colors */
+    /* 8 bright colors */
     // "#44475a", /* black   */
     // "#ff5555", /* red     */
     // "#50fa7b", /* green   */
@@ -605,3 +609,5 @@ static char ascii_printable[] =
 	" !\"#$%&'()*+,-./0123456789:;<=>?"
 	"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
 	"`abcdefghijklmnopqrstuvwxyz{|}~";
+
+#endif /* CONFIG_H__ */

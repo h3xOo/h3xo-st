@@ -16,7 +16,7 @@
 #include <X11/XKBlib.h>
 #include <X11/Xresource.h>
 
-char *argv0;
+static char *argv0;
 #include "arg.h"
 #include "st.h"
 #include "win.h"

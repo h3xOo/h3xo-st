@@ -17,6 +17,10 @@
 /* Each shape is encoded as 16-bits. Higher bits are category, lower are data */
 /* Categories (mutually exclusive except BDB): */
 /* For convenience, BDL/BDA/BBS/BDB are 1 bit each, the rest are enums */
+
+#ifndef BOXDRAW_DATA__
+#define BOXDRAW_DATA__
+
 #define BDL (1<<8)   /* Box Draw Lines (light/double/heavy) */
 #define BDA (1<<9)   /* Box Draw Arc (light) */
 
@@ -212,3 +216,5 @@ static const unsigned short boxdata[256] = {
 	/* U+2504 - U+250B, U+254C - U+254F: unsupported (dashes) */
 	/* U+2571 - U+2573: unsupported (diagonals) */
 };
+
+#endif /* BOXDRAW_DATA__ */

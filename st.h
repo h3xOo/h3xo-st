@@ -1,5 +1,8 @@
 /* See LICENSE for license details. */
 
+#ifndef ST_H__
+#define ST_H__
+
 #include <stdint.h>
 #include <sys/types.h>
 
@@ -144,3 +147,4 @@ extern float alphaUnfocus;
 extern const int boxdraw, boxdraw_bold, boxdraw_braille;
 extern unsigned int defaultcs;
 
+#endif /* ST_H__ */
