@@ -1,7 +1,7 @@
 #ifndef HB_H__
 #define HB_H__
 
-#include <stdlib.h>
+#include <stddef.h>
 #include <X11/Xft/Xft.h>
 #include <hb.h>
 #include <hb-ft.h>
