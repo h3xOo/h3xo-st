@@ -5,6 +5,9 @@
 #include <X11/cursorfont.h>
 #include <hb.h>
 #include <hb-ft.h>
+#include <harfbuzz/hb-ft.h>
+
+#include "hb.h"
 
 #include "st.h"
 
