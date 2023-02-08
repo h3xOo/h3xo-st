@@ -131,20 +131,20 @@ void drawboxes(int, int, int, int, XftColor *, XftColor *, const XftGlyphFontSpe
 #endif
 
 /* config.h globals */
-extern char *utmp;
-extern char *scroll;
-extern char *stty_args;
-extern char *vtiden;
-extern wchar_t *worddelimiters;
+extern const char *utmp;
+extern const char *scroll;
+extern const char *stty_args;
+extern const char *vtiden;
+extern const wchar_t *worddelimiters;
 extern int allowaltscreen;
-extern int allowwindowops;
-extern char *termname;
-extern unsigned int tabspaces;
-extern unsigned int defaultfg;
+extern const int allowwindowops;
+extern const char *termname;
+extern const unsigned int tabspaces;
+extern const unsigned int defaultfg;
 extern unsigned int defaultbg;
 extern float alpha;
 extern float alphaUnfocus;
 extern const int boxdraw, boxdraw_bold, boxdraw_braille;
-extern unsigned int defaultcs;
+extern const unsigned int defaultcs;
 
 #endif /* ST_H__ */
