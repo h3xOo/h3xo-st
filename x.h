@@ -1,11 +1,12 @@
 #ifndef X_H__
 #define X_H__
 
-#include "st.h"
 #include <X11/X.h>
 #include <X11/Xft/Xft.h>
 #include <X11/keysym.h>
 #include <sys/types.h>
+
+#include "st.h"
 
 /* types used in config.h */
 typedef struct {
