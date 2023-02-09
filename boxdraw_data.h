@@ -1,6 +1,6 @@
 /*
- * Copyright 2018 Avi Halachmi (:avih) avihpit@yahoo.com https://github.com/avih
- * MIT/X Consortium License
+ * Copyright 2018 Avi Halachmi (:avih) avihpit@yahoo.com
+ * https://github.com/avih MIT/X Consortium License
  */
 
 /*
@@ -14,7 +14,8 @@
  *   https://github.com/GNOME/vte/blob/master/doc/boxes.txt
  */
 
-/* Each shape is encoded as 16-bits. Higher bits are category, lower are data */
+/* Each shape is encoded as 16-bits. Higher bits are category, lower are data
+ */
 /* Categories (mutually exclusive except BDB): */
 /* For convenience, BDL/BDA/BBS/BDB are 1 bit each, the rest are enums */
 
@@ -34,8 +35,9 @@
 #define BBS (1 << 14) /* Box Block Shades */
 #define BDB (1 << 15) /* Box Draw is Bold */
 
-/* (BDL/BDA) Light/Double/Heavy x Left/Up/Right/Down/Horizontal/Vertical      */
-/* Heavy is light+double (literally drawing light+double align to form heavy) */
+/* (BDL/BDA) Light/Double/Heavy x Left/Up/Right/Down/Horizontal/Vertical */
+/* Heavy is light+double (literally drawing light+double align to form heavy)
+ */
 #define LL (1 << 0)
 #define LU (1 << 1)
 #define LR (1 << 2)

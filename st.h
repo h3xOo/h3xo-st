@@ -9,23 +9,24 @@
 /* macros */
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) < (b) ? (b) : (a))
-#define LEN(a) (sizeof(a) / sizeof(a)[0])
+#define LEN(a) (sizeof (a) / sizeof (a)[0])
 #define BETWEEN(x, a, b) ((a) <= (x) && (x) <= (b))
 #define DIVCEIL(n, d) (((n) + ((d)-1)) / (d))
 #define DEFAULT(a, b) (a) = (a) ? (a) : (b)
 #define LIMIT(x, a, b) (x) = (x) < (a) ? (a) : (x) > (b) ? (b) : (x)
-#define ATTRCMP(a, b)                                                          \
-    (((a).mode & (~ATTR_WRAP) & (~ATTR_LIGA)) !=                               \
-         ((b).mode & (~ATTR_WRAP) & (~ATTR_LIGA)) ||                           \
-     (a).fg != (b).fg || (a).bg != (b).bg)
-#define TIMEDIFF(t1, t2)                                                       \
+#define ATTRCMP(a, b)                                                         \
+    (((a).mode & (~ATTR_WRAP) & (~ATTR_LIGA))                                 \
+         != ((b).mode & (~ATTR_WRAP) & (~ATTR_LIGA))                          \
+     || (a).fg != (b).fg || (a).bg != (b).bg)
+#define TIMEDIFF(t1, t2)                                                      \
     ((t1.tv_sec - t2.tv_sec) * 1000 + (t1.tv_nsec - t2.tv_nsec) / 1E6)
 #define MODBIT(x, set, bit) ((set) ? ((x) |= (bit)) : ((x) &= ~(bit)))
 
 #define TRUECOLOR(r, g, b) (1 << 24 | (r) << 16 | (g) << 8 | (b))
 #define IS_TRUECOL(x) (1 << 24 & (x))
 
-enum glyph_attribute {
+enum glyph_attribute
+{
     ATTR_NULL = 0,
     ATTR_BOLD = 1 << 0,
     ATTR_FAINT = 1 << 1,
@@ -43,11 +44,24 @@ enum glyph_attribute {
     ATTR_BOLD_FAINT = ATTR_BOLD | ATTR_FAINT,
 };
 
-enum selection_mode { SEL_IDLE = 0, SEL_EMPTY = 1, SEL_READY = 2 };
+enum selection_mode
+{
+    SEL_IDLE = 0,
+    SEL_EMPTY = 1,
+    SEL_READY = 2
+};
 
-enum selection_type { SEL_REGULAR = 1, SEL_RECTANGULAR = 2 };
+enum selection_type
+{
+    SEL_REGULAR = 1,
+    SEL_RECTANGULAR = 2
+};
 
-enum selection_snap { SNAP_WORD = 1, SNAP_LINE = 2 };
+enum selection_snap
+{
+    SNAP_WORD = 1,
+    SNAP_LINE = 2
+};
 
 typedef unsigned char uchar;
 typedef unsigned int uint;
@@ -57,7 +71,8 @@ typedef unsigned short ushort;
 typedef uint_least32_t Rune;
 
 #define Glyph Glyph_
-typedef struct {
+typedef struct
+{
     Rune u;      /* character code */
     ushort mode; /* attribute flags */
     uint32_t fg; /* foreground  */
@@ -66,7 +81,8 @@ typedef struct {
 
 typedef Glyph *Line;
 
-typedef union {
+typedef union
+{
     int i;
     uint ui;
     float f;
@@ -74,52 +90,52 @@ typedef union {
     const char *s;
 } Arg;
 
-void die(const char *, ...);
-void redraw(void);
-void tfulldirt(void);
-void draw(void);
+void die (const char *, ...);
+void redraw (void);
+void tfulldirt (void);
+void draw (void);
 
-void externalpipe(const Arg *);
-void kscrolldown(const Arg *);
-void kscrollup(const Arg *);
+void externalpipe (const Arg *);
+void kscrolldown (const Arg *);
+void kscrollup (const Arg *);
 
-void printscreen(const Arg *);
-void printsel(const Arg *);
-void sendbreak(const Arg *);
-void toggleprinter(const Arg *);
+void printscreen (const Arg *);
+void printsel (const Arg *);
+void sendbreak (const Arg *);
+void toggleprinter (const Arg *);
 
-int tattrset(int);
-void tnew(int, int);
-void tresize(int, int);
-void tsetdirtattr(int);
-void ttyhangup(void);
-int ttynew(const char *, char *, const char *, char **);
-size_t ttyread(void);
-void ttyresize(int, int);
-void ttywrite(const char *, size_t, int);
+int tattrset (int);
+void tnew (int, int);
+void tresize (int, int);
+void tsetdirtattr (int);
+void ttyhangup (void);
+int ttynew (const char *, char *, const char *, char **);
+size_t ttyread (void);
+void ttyresize (int, int);
+void ttywrite (const char *, size_t, int);
 
-void resettitle(void);
+void resettitle (void);
 
-void selclear(void);
-void selinit(void);
-void selstart(int, int, int);
-void selextend(int, int, int, int);
-int selected(int, int);
-char *getsel(void);
+void selclear (void);
+void selinit (void);
+void selstart (int, int, int);
+void selextend (int, int, int, int);
+int selected (int, int);
+char *getsel (void);
 
-size_t utf8encode(Rune, char *);
+size_t utf8encode (Rune, char *);
 
-void *xmalloc(size_t);
-void *xrealloc(void *, size_t);
-char *xstrdup(const char *);
+void *xmalloc (size_t);
+void *xrealloc (void *, size_t);
+char *xstrdup (const char *);
 
-int isboxdraw(Rune);
-ushort boxdrawindex(const Glyph *);
+int isboxdraw (Rune);
+ushort boxdrawindex (const Glyph *);
 #ifdef XFT_VERSION
 /* only exposed to x.c, otherwise we'll need Xft.h for the types */
-void boxdraw_xinit(Display *, Colormap, XftDraw *, Visual *);
-void drawboxes(int, int, int, int, XftColor *, XftColor *,
-               const XftGlyphFontSpec *, int);
+void boxdraw_xinit (Display *, Colormap, XftDraw *, Visual *);
+void drawboxes (int, int, int, int, XftColor *, XftColor *,
+                const XftGlyphFontSpec *, int);
 #endif
 
 /* config.h globals */
@@ -150,20 +166,21 @@ extern const unsigned int defaultcs;
 
 /* macros */
 #define IS_SET(flag) ((term.mode & (flag)) != 0)
-#define ISCONTROLC0(c) (BETWEEN(c, 0, 0x1f) || (c) == 0x7f)
-#define ISCONTROLC1(c) (BETWEEN(c, 0x80, 0x9f))
-#define ISCONTROL(c) (ISCONTROLC0(c) || ISCONTROLC1(c))
-#define ISDELIM(u) (u && wcschr(worddelimiters, u))
-#define TLINE(y)                                                               \
-    ((y) < term.scr                                                            \
-         ? term.hist[((y) + term.histi - term.scr + HISTSIZE + 1) % HISTSIZE]  \
+#define ISCONTROLC0(c) (BETWEEN (c, 0, 0x1f) || (c) == 0x7f)
+#define ISCONTROLC1(c) (BETWEEN (c, 0x80, 0x9f))
+#define ISCONTROL(c) (ISCONTROLC0 (c) || ISCONTROLC1 (c))
+#define ISDELIM(u) (u && wcschr (worddelimiters, u))
+#define TLINE(y)                                                              \
+    ((y) < term.scr                                                           \
+         ? term.hist[((y) + term.histi - term.scr + HISTSIZE + 1) % HISTSIZE] \
          : term.line[(y)-term.scr])
-#define TLINE_HIST(y)                                                          \
-    ((y) <= HISTSIZE - term.row + 2                                            \
-         ? term.hist[(y)]                                                      \
+#define TLINE_HIST(y)                                                         \
+    ((y) <= HISTSIZE - term.row + 2                                           \
+         ? term.hist[(y)]                                                     \
          : term.line[(y - HISTSIZE + term.row - 3)])
 
-enum term_mode {
+enum term_mode
+{
     MODE_WRAP = 1 << 0,
     MODE_INSERT = 1 << 1,
     MODE_ALTSCREEN = 1 << 2,
@@ -173,15 +190,21 @@ enum term_mode {
     MODE_UTF8 = 1 << 6,
 };
 
-enum cursor_movement { CURSOR_SAVE, CURSOR_LOAD };
+enum cursor_movement
+{
+    CURSOR_SAVE,
+    CURSOR_LOAD
+};
 
-enum cursor_state {
+enum cursor_state
+{
     CURSOR_DEFAULT = 0,
     CURSOR_WRAPNEXT = 1,
     CURSOR_ORIGIN = 2
 };
 
-enum charset {
+enum charset
+{
     CS_GRAPHIC0,
     CS_GRAPHIC1,
     CS_UK,
@@ -191,7 +214,8 @@ enum charset {
     CS_FIN
 };
 
-enum escape_state {
+enum escape_state
+{
     ESC_START = 1,
     ESC_CSI = 2,
     ESC_STR = 4, /* DCS, OSC, PM, APC */
@@ -201,14 +225,16 @@ enum escape_state {
     ESC_UTF8 = 64,
 };
 
-typedef struct {
+typedef struct
+{
     Glyph attr; /* current char attributes */
     int x;
     int y;
     char state;
 } TCursor;
 
-typedef struct {
+typedef struct
+{
     int mode;
     int type;
     int snap;
@@ -219,7 +245,8 @@ typedef struct {
      * ob – original coordinates of the beginning of the selection
      * oe – original coordinates of the end of the selection
      */
-    struct {
+    struct
+    {
         int x, y;
     } nb, ne, ob, oe;
 
@@ -227,7 +254,8 @@ typedef struct {
 } Selection;
 
 /* Internal representation of the screen */
-typedef struct {
+typedef struct
+{
     int row; /* nb row */
     int col; /* nb col */
     int maxcol;
@@ -253,7 +281,8 @@ typedef struct {
 
 /* CSI Escape sequence structs */
 /* ESC '[' [[ [<priv>] <arg> [;]] <mode> [<mode>]] */
-typedef struct {
+typedef struct
+{
     char buf[ESC_BUF_SIZ]; /* raw string */
     size_t len;            /* raw string length */
     char priv;
@@ -264,7 +293,8 @@ typedef struct {
 
 /* STR Escape sequence structs */
 /* ESC type [[ [<priv>] <arg> [;]] <mode>] ESC '\' */
-typedef struct {
+typedef struct
+{
     char type;  /* ESC type ... */
     char *buf;  /* allocated raw string */
     size_t siz; /* allocation size */
@@ -273,70 +303,70 @@ typedef struct {
     int narg; /* nb of args */
 } STREscape;
 
-static void execsh(char *, char **);
-static void stty(char **);
-static void sigchld(int);
-static void ttywriteraw(const char *, size_t);
+static void execsh (char *, char **);
+static void stty (char **);
+static void sigchld (int);
+static void ttywriteraw (const char *, size_t);
 
-static void csidump(void);
-static void csihandle(void);
-static void csiparse(void);
-static void csireset(void);
-static void osc_color_response(int, int, int);
-static int eschandle(uchar);
-static void strdump(void);
-static void strhandle(void);
-static void strparse(void);
-static void strreset(void);
+static void csidump (void);
+static void csihandle (void);
+static void csiparse (void);
+static void csireset (void);
+static void osc_color_response (int, int, int);
+static int eschandle (uchar);
+static void strdump (void);
+static void strhandle (void);
+static void strparse (void);
+static void strreset (void);
 
-static void tprinter(char *, size_t);
-static void tdumpsel(void);
-static void tdumpline(int);
-static void tdump(void);
-static void tclearregion(int, int, int, int);
-static void tcursor(int);
-static void tdeletechar(int);
-static void tdeleteline(int);
-static void tinsertblank(int);
-static void tinsertblankline(int);
-static int tlinelen(int);
-static void tmoveto(int, int);
-static void tmoveato(int, int);
-static void tnewline(int);
-static void tputtab(int);
-static void tputc(Rune);
-static void treset(void);
-static void tscrollup(int, int, int);
-static void tscrolldown(int, int, int);
-static void tsetattr(const int *, int);
-static void tsetchar(Rune, const Glyph *, int, int);
-static void tsetdirt(int, int);
-static void tsetscroll(int, int);
-static void tswapscreen(void);
-static void tsetmode(int, int, const int *, int);
-static int twrite(const char *, int, int);
-static void tcontrolcode(uchar);
-static void tdectest(char);
-static void tdefutf8(char);
-static int32_t tdefcolor(const int *, int *, int);
-static void tdeftran(char);
-static void tstrsequence(uchar);
+static void tprinter (char *, size_t);
+static void tdumpsel (void);
+static void tdumpline (int);
+static void tdump (void);
+static void tclearregion (int, int, int, int);
+static void tcursor (int);
+static void tdeletechar (int);
+static void tdeleteline (int);
+static void tinsertblank (int);
+static void tinsertblankline (int);
+static int tlinelen (int);
+static void tmoveto (int, int);
+static void tmoveato (int, int);
+static void tnewline (int);
+static void tputtab (int);
+static void tputc (Rune);
+static void treset (void);
+static void tscrollup (int, int, int);
+static void tscrolldown (int, int, int);
+static void tsetattr (const int *, int);
+static void tsetchar (Rune, const Glyph *, int, int);
+static void tsetdirt (int, int);
+static void tsetscroll (int, int);
+static void tswapscreen (void);
+static void tsetmode (int, int, const int *, int);
+static int twrite (const char *, int, int);
+static void tcontrolcode (uchar);
+static void tdectest (char);
+static void tdefutf8 (char);
+static int32_t tdefcolor (const int *, int *, int);
+static void tdeftran (char);
+static void tstrsequence (uchar);
 
-static void drawregion(int, int, int, int);
+static void drawregion (int, int, int, int);
 
-static void selnormalize(void);
-static void selscroll(int, int);
-static void selsnap(int *, int *, int);
+static void selnormalize (void);
+static void selscroll (int, int);
+static void selsnap (int *, int *, int);
 
-static size_t utf8decode(const char *, Rune *, size_t);
-static Rune utf8decodebyte(char, size_t *);
-static char utf8encodebyte(Rune, size_t);
-static size_t utf8validate(Rune *, size_t);
+static size_t utf8decode (const char *, Rune *, size_t);
+static Rune utf8decodebyte (char, size_t *);
+static char utf8encodebyte (Rune, size_t);
+static size_t utf8validate (Rune *, size_t);
 
-static char *base64dec(const char *);
-static char base64dec_getc(const char **);
+static char *base64dec (const char *);
+static char base64dec_getc (const char **);
 
-static ssize_t xwrite(int, const char *, size_t);
+static ssize_t xwrite (int, const char *, size_t);
 
 /* Globals */
 static Term term;
@@ -347,10 +377,10 @@ static int iofd = 1;
 static int cmdfd;
 static pid_t pid;
 
-static const uchar utfbyte[UTF_SIZ + 1] = {0x80, 0, 0xC0, 0xE0, 0xF0};
-static const uchar utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
-static const Rune utfmin[UTF_SIZ + 1] = {0, 0, 0x80, 0x800, 0x10000};
-static const Rune utfmax[UTF_SIZ + 1] = {0x10FFFF, 0x7F, 0x7FF, 0xFFFF,
-                                         0x10FFFF};
+static const uchar utfbyte[UTF_SIZ + 1] = { 0x80, 0, 0xC0, 0xE0, 0xF0 };
+static const uchar utfmask[UTF_SIZ + 1] = { 0xC0, 0x80, 0xE0, 0xF0, 0xF8 };
+static const Rune utfmin[UTF_SIZ + 1] = { 0, 0, 0x80, 0x800, 0x10000 };
+static const Rune utfmax[UTF_SIZ + 1]
+    = { 0x10FFFF, 0x7F, 0x7FF, 0xFFFF, 0x10FFFF };
 
 #endif /* ST_H__ */

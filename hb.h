@@ -8,8 +8,8 @@
 
 #include "st.h"
 
-void hbunloadfonts();
-void hbtransform(XftGlyphFontSpec *specs, const Glyph *glyphs, size_t len,
-                 int x, int y);
+void hbunloadfonts ();
+void hbtransform (XftGlyphFontSpec *specs, const Glyph *glyphs, size_t len,
+                  int x, int y);
 
 #endif /* HB_H__ */
