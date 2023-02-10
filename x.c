@@ -2253,7 +2253,7 @@ usage (void)
     die ("usage: %s [-aiv] [-c class] [-f font] [-g geometry]"
          " [-n name] [-o file]\n"
          "          [-T title] [-t title] [-w windowid]"
-         " [[-e] command [args ...]]\n", 
+         " [[-e] command [args ...]]\n",
          argv0);
 }
 
