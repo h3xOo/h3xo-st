@@ -17,11 +17,9 @@
 #include "st.h"
 #include "x.h"
 
-static const char *font
-    = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
+static const char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
 // static char *font = "Fira Code:pixelsize=20:antialias=true:autohint=true";
-static char *font2[]
-    = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
+static char* font2[] = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
 static int borderpx = 10;
 
 /*
@@ -32,14 +30,14 @@ static int borderpx = 10;
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
  */
-static const char *shell = "/bin/sh";
-const char *utmp = NULL;
+static const char* shell = "/bin/sh";
+const char* utmp = NULL;
 /* scroll program: to enable use a string like "scroll" */
-const char *scroll = NULL;
-const char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
+const char* scroll = NULL;
+const char* stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 
 /* identification sequence returned in DA and DECID */
-const char *vtiden = "\033[?6c";
+const char* vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
 static const float cwscale = 1.0;
@@ -50,7 +48,7 @@ static const float chscale = 1.0;
  *
  * More advanced example: L" `'\"()[]{}"
  */
-const wchar_t *worddelimiters = L" ";
+const wchar_t* worddelimiters = L" ";
 
 /* selection timeouts (in milliseconds) */
 static const unsigned int doubleclicktimeout = 300;
@@ -102,7 +100,7 @@ const int boxdraw_braille = 0;
 static const int bellvolume = 0;
 
 /* default TERM value */
-const char *termname = "st-256color";
+const char* termname = "st-256color";
 
 /*
  * spaces per tab
@@ -135,7 +133,7 @@ float alphaUnfocus;
 // float alphaUnfocus;
 
 /* Terminal colors (16 first used in escape sequence) */
-static const char *colorname[] = {
+static const char* colorname[] = {
 
     /*
      * Gruvbox default colors
@@ -292,14 +290,14 @@ static const MouseShortcut mshortcuts[] = {
 };
 
 /* Internal keyboard shortcuts. */
-#define MODKEY Mod1Mask                /* left alt */
+#define MODKEY Mod1Mask /* left alt */
 #define TERMMOD (Mod1Mask | ShiftMask) /* left alt + shift */
 
-static const char *openurlcmd[]
+static const char* openurlcmd[]
     = { "/bin/sh", "-c", "st-urlhandler -o", "externalpipe", NULL };
-static const char *copyurlcmd[]
+static const char* copyurlcmd[]
     = { "/bin/sh", "-c", "st-urlhandler -c", "externalpipe", NULL };
-static const char *copyoutput[]
+static const char* copyoutput[]
     = { "/bin/sh", "-c", "st-copyout", "externalpipe", NULL };
 
 static const Shortcut shortcuts[] = {

@@ -5,8 +5,7 @@
 
 #include "st.h"
 
-enum win_mode
-{
+enum win_mode {
     MODE_VISIBLE = 1 << 0,
     MODE_FOCUSED = 1 << 1,
     MODE_APPKEYPAD = 1 << 2,
@@ -29,21 +28,21 @@ enum win_mode
     = MODE_MOUSEBTN | MODE_MOUSEMOTION | MODE_MOUSEX10 | MODE_MOUSEMANY,
 };
 
-void xbell (void);
-void xclipcopy (void);
-void xdrawcursor (int, int, Glyph, int, int, Glyph, Line, int);
-void xdrawline (Line, int, int, int);
-void xfinishdraw (void);
-void xloadcols (void);
-int xsetcolorname (int, const char *);
-int xgetcolor (int, unsigned char *, unsigned char *, unsigned char *);
-void xseticontitle (char *);
-void xsettitle (char *);
-int xsetcursor (int);
-void xsetmode (int, unsigned int);
-void xsetpointermotion (int);
-void xsetsel (char *);
-int xstartdraw (void);
-void xximspot (int, int);
+void xbell(void);
+void xclipcopy(void);
+void xdrawcursor(int, int, Glyph, int, int, Glyph, Line, int);
+void xdrawline(Line, int, int, int);
+void xfinishdraw(void);
+void xloadcols(void);
+int xsetcolorname(int, const char*);
+int xgetcolor(int, unsigned char*, unsigned char*, unsigned char*);
+void xseticontitle(char*);
+void xsettitle(char*);
+int xsetcursor(int);
+void xsetmode(int, unsigned int);
+void xsetpointermotion(int);
+void xsetsel(char*);
+int xstartdraw(void);
+void xximspot(int, int);
 
 #endif /* WIN_H__ */
