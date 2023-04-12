@@ -11,34 +11,30 @@
 /* Rounded non-negative integers division of n / d  */
 #define DIV(n, d) (((n) + (d) / 2) / (d))
 
-static Display* xdpy;
+static Display *xdpy;
 static Colormap xcmap;
-static XftDraw* xd;
-static Visual* xvis;
+static XftDraw *xd;
+static Visual *xvis;
 
-static void drawbox(int, int, int, int, XftColor*, XftColor*, ushort);
-static void drawboxlines(int, int, int, int, XftColor*, ushort);
+static void drawbox(int, int, int, int, XftColor *, XftColor *, ushort);
+static void drawboxlines(int, int, int, int, XftColor *, ushort);
 
 /* public API */
 
-void boxdraw_xinit(Display* dpy, Colormap cmap, XftDraw* draw, Visual* vis)
-{
+void boxdraw_xinit(Display *dpy, Colormap cmap, XftDraw *draw, Visual *vis) {
     xdpy = dpy;
     xcmap = cmap;
     xd = draw, xvis = vis;
 }
 
-int isboxdraw(Rune u)
-{
+int isboxdraw(Rune u) {
     Rune block = u & ~0xff;
-    return (boxdraw && block == 0x2500 && boxdata[(uint8_t)u])
-        || (boxdraw_braille && block == 0x2800);
+    return (boxdraw && block == 0x2500 && boxdata[(uint8_t)u]) ||
+           (boxdraw_braille && block == 0x2800);
 }
 
 /* the "index" is actually the entire shape data encoded as ushort */
-ushort
-boxdrawindex(const Glyph* g)
-{
+ushort boxdrawindex(const Glyph *g) {
     if (boxdraw_braille && (g->u & ~0xff) == 0x2800)
         return BRL | (uint8_t)g->u;
     if (boxdraw_bold && (g->mode & ATTR_BOLD))
@@ -46,17 +42,16 @@ boxdrawindex(const Glyph* g)
     return boxdata[(uint8_t)g->u];
 }
 
-void drawboxes(int x, int y, int cw, int ch, XftColor* fg, XftColor* bg,
-    const XftGlyphFontSpec* specs, int len)
-{
+void drawboxes(int x, int y, int cw, int ch, XftColor *fg, XftColor *bg,
+               const XftGlyphFontSpec *specs, int len) {
     for (; len-- > 0; x += cw, specs++)
         drawbox(x, y, cw, ch, fg, bg, (ushort)specs->glyph);
 }
 
 /* implementation */
 
-void drawbox(int x, int y, int w, int h, XftColor* fg, XftColor* bg, ushort bd)
-{
+void drawbox(int x, int y, int w, int h, XftColor *fg, XftColor *bg,
+             ushort bd) {
     ushort cat = bd & ~(BDB | 0xff); /* mask out bold and data */
     if (bd & (BDL | BDA)) {
         /* lines (light/double/heavy/arcs) */
@@ -90,11 +85,10 @@ void drawbox(int x, int y, int w, int h, XftColor* fg, XftColor* bg, ushort bd)
         /* Shades - data is 1/2/3 for 25%/50%/75% alpha, respectively */
         int d = (uint8_t)bd;
         XftColor xfc;
-        XRenderColor xrc = { .alpha = 0xffff };
+        XRenderColor xrc = {.alpha = 0xffff};
 
         xrc.red = DIV(fg->color.red * d + bg->color.red * (4 - d), 4);
-        xrc.green
-            = DIV(fg->color.green * d + bg->color.green * (4 - d), 4);
+        xrc.green = DIV(fg->color.green * d + bg->color.green * (4 - d), 4);
         xrc.blue = DIV(fg->color.blue * d + bg->color.blue * (4 - d), 4);
 
         XftColorAllocValue(xdpy, xvis, xcmap, &xrc, &xfc);
@@ -124,8 +118,7 @@ void drawbox(int x, int y, int w, int h, XftColor* fg, XftColor* bg, ushort bd)
     }
 }
 
-void drawboxlines(int x, int y, int w, int h, XftColor* fg, ushort bd)
-{
+void drawboxlines(int x, int y, int w, int h, XftColor *fg, ushort bd) {
     /* s: stem thickness. width/8 roughly matches underscore thickness. */
     /* We draw bold as 1.5 * normal-stem and at least 1px thicker.      */
     /* doubles draw at least 3px, even when w or h < 3. bold needs 6px. */
@@ -170,32 +163,24 @@ void drawboxlines(int x, int y, int w, int h, XftColor* fg, ushort bd)
          */
         int dl = bd & DL, du = bd & DU, dr = bd & DR, dd = bd & DD;
         if (dl) {
-            int p = dd ? -s : 0, n = du ? -s : dd ? s
-                                                  : 0;
+            int p = dd ? -s : 0, n = du ? -s : dd ? s : 0;
             XftDrawRect(xd, fg, x, y + h2 + s, w2 + s + p, s);
             XftDrawRect(xd, fg, x, y + h2 - s, w2 + s + n, s);
         }
         if (du) {
-            int p = dl ? -s : 0, n = dr ? -s : dl ? s
-                                                  : 0;
+            int p = dl ? -s : 0, n = dr ? -s : dl ? s : 0;
             XftDrawRect(xd, fg, x + w2 - s, y, s, h2 + s + p);
             XftDrawRect(xd, fg, x + w2 + s, y, s, h2 + s + n);
         }
         if (dr) {
-            int p = du ? -s : 0, n = dd ? -s : du ? s
-                                                  : 0;
-            XftDrawRect(xd, fg, x + w2 - p, y + h2 - s, w - w2 + p,
-                s);
-            XftDrawRect(xd, fg, x + w2 - n, y + h2 + s, w - w2 + n,
-                s);
+            int p = du ? -s : 0, n = dd ? -s : du ? s : 0;
+            XftDrawRect(xd, fg, x + w2 - p, y + h2 - s, w - w2 + p, s);
+            XftDrawRect(xd, fg, x + w2 - n, y + h2 + s, w - w2 + n, s);
         }
         if (dd) {
-            int p = dr ? -s : 0, n = dl ? -s : dr ? s
-                                                  : 0;
-            XftDrawRect(xd, fg, x + w2 + s, y + h2 - p, s,
-                h - h2 + p);
-            XftDrawRect(xd, fg, x + w2 - s, y + h2 - n, s,
-                h - h2 + n);
+            int p = dr ? -s : 0, n = dl ? -s : dr ? s : 0;
+            XftDrawRect(xd, fg, x + w2 + s, y + h2 - p, s, h - h2 + p);
+            XftDrawRect(xd, fg, x + w2 - s, y + h2 - n, s, h - h2 + n);
         }
     }
 }
