@@ -17,8 +17,8 @@
 #include "st.h"
 #include "x.h"
 
-static const char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
-// static char *font = "Fira Code:pixelsize=20:antialias=true:autohint=true";
+static const char* font = "SauceCodePro Nerd Font:pixelsize=20:antialias=true:autohint=true";
+// static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
 static char* font2[] = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
 static int borderpx = 10;
 
@@ -166,7 +166,7 @@ static const char* colorname[] = {
     "#555555", /* 257 -> rev cursor*/
 
     /* Gruvbox */
-    "#32302f", /* 258 -> bg */ /* hard contrast: #1d2021 / soft contrast: #32302f, default: #282828 */
+    "#282828", /* 258 -> bg */ /* hard contrast: #1d2021 / soft contrast: #32302f, default: #282828 */
     "#ebdbb2", /* 259 -> fg */
 };
 
