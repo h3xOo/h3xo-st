@@ -145,7 +145,7 @@ static inline ushort sixd_to_16bit(int);
 static void xresetfontsettings(ushort mode, Font** font, int* frcflags);
 static int xmakeglyphfontspecs(XftGlyphFontSpec*, const Glyph*, int, int,
     int);
-static void xdrawglyphfontspecs(const XftGlyphFontSpec*, Glyph, int, int, int);
+static void xdrawglyphfontspecs(const XftGlyphFontSpec*, Glyph, int, int, int, int);
 static void xdrawglyph(Glyph, int, int);
 static void xclear(int, int, int, int);
 static int xgeommasktogravity(int);
