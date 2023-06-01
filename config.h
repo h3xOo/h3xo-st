@@ -15,12 +15,11 @@
 #include <sys/types.h>
 
 #include "st.h"
-#include "x.h"
 
 static const char* font = "SauceCodePro Nerd Font:pixelsize=20:antialias=true:autohint=true";
 // static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
 static char* font2[] = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
-static int borderpx = 10;
+static int borderpx = 5;
 
 /*
  * What program is execed by st depends of these precedence rules:

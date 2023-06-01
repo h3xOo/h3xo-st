@@ -20,10 +20,10 @@ options:
 .c.o:
 	$(CC) $(STCFLAGS) -c $<
 
-st.o: config.h st.h win.h x.h
-x.o: arg.h config.h st.h win.h hb.h x.h
+st.o: config.h st.h win.h
+x.o: arg.h config.h st.h win.h hb.h
 hb.o: st.h
-boxdraw.o: config.h st.h boxdraw_data.h x.h
+boxdraw.o: config.h st.h boxdraw_data.h
 
 $(OBJ): config.h config.mk
 
