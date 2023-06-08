@@ -134,39 +134,73 @@ float alphaUnfocus;
 /* Terminal colors (16 first used in escape sequence) */
 static const char* colorname[] = {
 
+    // /*
+    //  * Gruvbox default colors
+    //  */
+
+    // /* 8 normal colors */
+    // "#282828",
+    // "#cc241d",
+    // "#98971a",
+    // "#d79921",
+    // "#458588",
+    // "#b16286",
+    // "#689d6a",
+    // "#a89984",
+    // "#928374",
+
+    // /* 8 bright colors */
+    // "#fb4934",
+    // "#b8bb26",
+    // "#fabd2f",
+    // "#83a598",
+    // "#d3869b",
+    // "#8ec07c",
+    // "#ebdbb2",
+
+    // [255] = 0,
+
+    // /* more colors can be added after 255 to use with DefaultXX */
+    // "#add8e6", /* 256 -> cursor */
+    // "#555555", /* 257 -> rev cursor*/
+
+    // /* Gruvbox */
+    // "#282828", /* 258 -> bg */ /* hard contrast: #1d2021 / soft contrast: #32302f, default: #282828 */
+    // "#ebdbb2", /* 259 -> fg */
+
     /*
-     * Gruvbox default colors
+     * Kanagawa default colors
      */
 
     /* 8 normal colors */
-    "#282828",
-    "#cc241d",
-    "#98971a",
-    "#d79921",
-    "#458588",
-    "#b16286",
-    "#689d6a",
-    "#a89984",
-    "#928374",
+    "#1F1F28",
+    "#E46A78",
+    "#98BC6D",
+    "#E5C283",
+    "#7EB3C9",
+    "#957FB8",
+    "#7EB3C9",
+    "#DDD8BB",
 
     /* 8 bright colors */
-    "#fb4934",
-    "#b8bb26",
-    "#fabd2f",
-    "#83a598",
-    "#d3869b",
-    "#8ec07c",
-    "#ebdbb2",
+    "#3C3C51",
+    "#EC818C",
+    "#9EC967",
+    "#F1C982",
+    "#7BC2DF",
+    "#A98FD2",
+    "#7BC2DF",
+    "#A8A48D",
 
     [255] = 0,
 
     /* more colors can be added after 255 to use with DefaultXX */
-    "#add8e6", /* 256 -> cursor */
-    "#555555", /* 257 -> rev cursor*/
+    "#E6E0C2", /* 256 -> cursor */
+    "#1F1F28", /* 257 -> rev cursor*/
 
-    /* Gruvbox */
-    "#282828", /* 258 -> bg */ /* hard contrast: #1d2021 / soft contrast: #32302f, default: #282828 */
-    "#ebdbb2", /* 259 -> fg */
+    /* Kanagawa */
+    "#1F1F28", /* 258 -> bg */
+    "#DDD8BB", /* 259 -> fg */
 };
 
 static const unsigned int defaultitalic = 7;
