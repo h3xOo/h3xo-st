@@ -173,34 +173,34 @@ static const char* colorname[] = {
      */
 
     /* 8 normal colors */
-    "#1F1F28",
-    "#E46A78",
-    "#98BC6D",
-    "#E5C283",
-    "#7EB3C9",
-    "#957FB8",
-    "#7EB3C9",
-    "#DDD8BB",
+    "#16161d",
+    "#c34043",
+    "#76946a",
+    "#c0a36e",
+    "#7e9cd8",
+    "#957fb8",
+    "#6a9589",
+    "#c8c093",
 
     /* 8 bright colors */
-    "#3C3C51",
-    "#EC818C",
-    "#9EC967",
-    "#F1C982",
-    "#7BC2DF",
-    "#A98FD2",
-    "#7BC2DF",
-    "#A8A48D",
+    "#727169",
+    "#e82626",
+    "#98bb6c",
+    "#e6c384",
+    "#7fb4ca",
+    "#938aa9",
+    "#7aa89f",
+    "#dcd7ba",
 
     [255] = 0,
 
     /* more colors can be added after 255 to use with DefaultXX */
-    "#E6E0C2", /* 256 -> cursor */
-    "#1F1F28", /* 257 -> rev cursor*/
+    "#c8c093", /* 256 -> cursor */
+    "#1f1f28", /* 257 -> rev cursor*/
 
     /* Kanagawa */
-    "#1F1F28", /* 258 -> bg */
-    "#DDD8BB", /* 259 -> fg */
+    "#1f1f28", /* 258 -> bg */
+    "#dcd7ba", /* 259 -> fg */
 };
 
 static const unsigned int defaultitalic = 7;
