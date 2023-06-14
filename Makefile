@@ -7,15 +7,7 @@ include config.mk
 SRC = st.c x.c boxdraw.c hb.c
 OBJ = $(SRC:.c=.o)
 
-all: options st
-
-options:
-	@echo st build options:
-	@echo "CFLAGS  = $(STCFLAGS)"
-	@echo "CFLAGS  = $(CFLAGS)"
-	@echo "LDFLAGS = $(STLDFLAGS)"
-	@echo "CC      = $(CC)"
-	@echo ""
+all: st
 
 .c.o:
 	$(CC) $(STCFLAGS) -c $<

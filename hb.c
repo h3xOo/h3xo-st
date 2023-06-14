@@ -33,7 +33,7 @@ static HbFontMatch* hbfontcache = NULL;
  */
 hb_feature_t features[] = {};
 
-void hbunloadfonts()
+void hbunloadfonts(void)
 {
     for (int i = 0; i < hbfontslen; i++) {
         hb_font_destroy(hbfontcache[i].font);
