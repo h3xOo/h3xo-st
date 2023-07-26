@@ -23,7 +23,7 @@ LIBS = -L$(X11LIB) -lm -lrt -lX11 -lutil -lXft -lXrender\
        `$(PKG_CONFIG) --libs harfbuzz`
 
 # flags
-CFLAGS = -O2 -Wall -Wextra
+CFLAGS = -std=c17 -O2 -Wall -Wextra
 STCPPFLAGS = -DVERSION=\"$(VERSION)\" -D_XOPEN_SOURCE=600
 STCFLAGS = $(INCS) $(STCPPFLAGS) $(CPPFLAGS) $(CFLAGS)
 STLDFLAGS = $(LIBS) $(LDFLAGS)
