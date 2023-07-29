@@ -6,6 +6,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "hb.h"
 #include "st.h"
@@ -16,7 +17,7 @@
         .start = HB_FEATURE_GLOBAL_START, .end = HB_FEATURE_GLOBAL_END \
     }
 
-hb_font_t* hbfindfont(XftFont* match);
+static hb_font_t* hbfindfont(XftFont* match);
 
 typedef struct {
     XftFont* match;
@@ -31,7 +32,7 @@ static HbFontMatch* hbfontcache = NULL;
  * e. g.
  * FEATURE('c', 'a', 'l', 't'), FEATURE('d', 'l', 'i', 'g')
  */
-hb_feature_t features[] = {};
+static hb_feature_t features[] = {};
 
 void hbunloadfonts(void)
 {
