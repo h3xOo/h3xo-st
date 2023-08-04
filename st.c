@@ -62,8 +62,10 @@ enum term_mode {
     MODE_UTF8 = 1 << 6,
 };
 
-enum cursor_movement { CURSOR_SAVE,
-    CURSOR_LOAD };
+enum cursor_movement {
+    CURSOR_SAVE,
+    CURSOR_LOAD
+};
 
 enum cursor_state {
     CURSOR_DEFAULT = 0,
@@ -126,7 +128,7 @@ typedef struct {
     Line hist[HISTSIZE]; /* history buffer */
     int histi; /* history index */
     int scr; /* scroll back */
-    int* dirty; /* dirtyness of lines */
+    int* dirty; /* dirtiness of lines */
     TCursor c; /* cursor */
     int ocx; /* old cursor col */
     int ocy; /* old cursor row */
