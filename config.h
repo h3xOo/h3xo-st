@@ -125,7 +125,7 @@ const unsigned int tabspaces = 4;
 
 float alpha = 1.0;
 const float alphaOffset = 0;
-float alphaUnfocus;
+float alphaUnfocus = 0;
 
 // float alpha = 0.8;
 // float alphaOffset = -0.05;
