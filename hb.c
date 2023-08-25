@@ -40,9 +40,7 @@ static RuneBuffer hbrunebuffer = { 0, NULL };
  */
 static hb_feature_t features[] = { FEATURE('c', 'a', 'l', 't'), FEATURE('d', 'l', 'i', 'g') };
 
-void
-hbunloadfonts()
-{
+void hbunloadfonts() {
     for (int i = 0; i < hbfontcache.capacity; i++) {
         hb_font_destroy(hbfontcache.fonts[i].font);
         XftUnlockFace(hbfontcache.fonts[i].match);
@@ -55,9 +53,7 @@ hbunloadfonts()
     hbfontcache.capacity = 0;
 }
 
-hb_font_t *
-hbfindfont(XftFont *match)
-{
+hb_font_t* hbfindfont(XftFont *match) {
     for (int i = 0; i < hbfontcache.capacity; i++) {
         if (hbfontcache.fonts[i].match == match)
             return hbfontcache.fonts[i].font;
