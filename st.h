@@ -7,9 +7,9 @@
 #include <sys/types.h>
 
 /* macros */
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) < (b) ? (b) : (a))
-#define LEN(a) (sizeof(a) / sizeof(a)[0])
+#define MIN(a, b)   ((a) < (b) ? (a) : (b))
+#define MAX(a, b)   ((a) < (b) ? (b) : (a))
+#define LEN(a)      (sizeof(a) / sizeof(a)[0])
 #define BETWEEN(x, a, b) ((a) <= (x) && (x) <= (b))
 #define DIVCEIL(n, d) (((n) + ((d)-1)) / (d))
 #define DEFAULT(a, b) (a) = (a) ? (a) : (b)
@@ -47,14 +47,19 @@ enum drawing_mode {
     DRAW_FG = 1 << 1,
 };
 
-enum selection_mode { SEL_IDLE = 0,
+enum selection_mode {
+    SEL_IDLE = 0,
     SEL_EMPTY = 1,
-    SEL_READY = 2 };
+    SEL_READY = 2
+};
 
-enum selection_type { SEL_REGULAR = 1,
-    SEL_RECTANGULAR = 2 };
+enum selection_type {
+    SEL_REGULAR = 1,
+    SEL_RECTANGULAR = 2
+};
 
-enum selection_snap {SNAP_WORD = 1,
+enum selection_snap {
+    SNAP_WORD = 1,
     SNAP_LINE = 2
 };
 
@@ -127,8 +132,7 @@ ushort boxdrawindex(const Glyph*);
 #ifdef XFT_VERSION
 /* only exposed to x.c, otherwise we'll need Xft.h for the types */
 void boxdraw_xinit(Display*, Colormap, XftDraw*, Visual*);
-void drawboxes(int, int, int, int, XftColor*, XftColor*,
-    const XftGlyphFontSpec*, int);
+void drawboxes(int, int, int, int, XftColor*, XftColor*, const XftGlyphFontSpec*, int);
 #endif
 
 /* config.h globals */
