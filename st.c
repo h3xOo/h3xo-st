@@ -1745,6 +1745,33 @@ void csihandle(void) {
             goto unknown;
         }
         break;
+    case 't': /* title stack operations */
+        switch (csiescseq.arg[0]) {
+        case 22: /* pust current title on stack */
+            switch (csiescseq.arg[1]) {
+            case 0:
+            case 1:
+            case 2:
+                xpushtitle();
+                break;
+            default:
+                goto unknown;
+            }
+            break;
+        case 23: /* pop last title from stack */
+            switch (csiescseq.arg[1]) {
+            case 0:
+            case 1:
+            case 2:
+                xsettitle(NULL, 1);
+                break;
+            default:
+                goto unknown;
+            }
+            break;
+        default:
+            goto unknown;
+        }
     }
 }
 
@@ -1816,7 +1843,7 @@ void strhandle(void) {
         switch (par) {
         case 0:
             if (narg > 1) {
-                xsettitle(strescseq.args[1]);
+                xsettitle(strescseq.args[1], 0);
                 xseticontitle(strescseq.args[1]);
             }
             return;
@@ -1826,7 +1853,7 @@ void strhandle(void) {
             return;
         case 2:
             if (narg > 1)
-                xsettitle(strescseq.args[1]);
+                xsettitle(strescseq.args[1], 0);
             return;
         case 52:
             if (narg > 2 && allowwindowops) {
@@ -1883,7 +1910,7 @@ void strhandle(void) {
         }
         break;
     case 'k': /* old title set compatibility */
-        xsettitle(strescseq.args[0]);
+        xsettitle(strescseq.args[0], 0);
         return;
     case 'P': /* DCS -- Device Control String */
     case '_': /* APC -- Application Program Command */
@@ -2276,6 +2303,7 @@ int eschandle(uchar ascii) {
         break;
     case 'c': /* RIS -- Reset to initial state */
         treset();
+        xfreetitlestack();
         resettitle();
         xloadcols();
         break;
@@ -2571,7 +2599,7 @@ void tresize(int col, int row) {
 }
 
 void resettitle(void) {
-    xsettitle(NULL);
+    xsettitle(NULL, 0);
 }
 
 void drawregion(int x1, int y1, int x2, int y2) {
