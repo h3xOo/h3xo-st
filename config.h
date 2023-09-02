@@ -16,7 +16,7 @@
 
 #include "st.h"
 
-static const char* font = "SauceCodePro Nerd Font:pixelsize=20:antialias=true:autohint=true";
+static const char* font = "JetBrainsMono Nerd Font:pixelsize=20:antialias=true:autohint=true";
 // static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
 static char* font2[] = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
 static int borderpx = 5;
@@ -173,7 +173,7 @@ static const char* colorname[] = {
      */
 
     /* 8 normal colors */
-    "#16161d",
+    "#1f1f28",
     "#c34043",
     "#76946a",
     "#c0a36e",
