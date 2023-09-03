@@ -17,9 +17,11 @@
 #include "st.h"
 
 static const char* font = "JetBrainsMono Nerd Font:pixelsize=20:antialias=true:autohint=true";
-// static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true";
+/* static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true"; */
+/* static char* font = "SauceCodePro Nerd Font:pixelsize=20:antialias=true:autohint=true"; */
+/* static char* font = "FiraCode:pixelsize=20:antialias=true:autohint=true"; */
 static char* font2[] = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
-static int borderpx = 5;
+static int borderpx = 4;
 
 /*
  * What program is execed by st depends of these precedence rules:
