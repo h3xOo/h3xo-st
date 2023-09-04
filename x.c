@@ -70,7 +70,6 @@ static void clipcopy(const Arg*);
 static void clippaste(const Arg*);
 static void numlock(const Arg*);
 static void selpaste(const Arg*);
-static void changealpha(const Arg*);
 static void zoom(const Arg*);
 static void zoomabs(const Arg*);
 static void zoomreset(const Arg*);
@@ -121,7 +120,6 @@ typedef struct {
     XSetWindowAttributes attrs;
     int scr;
     int isfixed; /* is fixed geometry? */
-    int depth; /* bit depth */
     int l, t; /* left and top offset */
     int gm; /* geometry mask */
 } XWindow;
@@ -183,7 +181,6 @@ static void xsetenv(void);
 static void xseturgency(int);
 static int evcol(XEvent*);
 static int evrow(XEvent*);
-static float clamp(float, float, float);
 
 static void expose(XEvent*);
 static void visibility(XEvent*);
@@ -270,7 +267,6 @@ static char* usedfont = NULL;
 static double usedfontsize = 0;
 static double defaultfontsize = 0;
 
-static char* opt_alpha = NULL;
 static char* opt_class = NULL;
 static char** opt_cmd = NULL;
 static char* opt_embed = NULL;
@@ -316,17 +312,6 @@ void numlock(const Arg* dummy) {
     win.mode ^= MODE_NUMLOCK;
 }
 
-void changealpha(const Arg* arg)
-{
-    if ((alpha > 0 && arg->f < 0) || (alpha < 1 && arg->f > 0))
-        alpha += arg->f;
-    alpha = clamp(alpha, 0.0, 1.0);
-    alphaUnfocus = clamp(alpha - alphaOffset, 0.0, 1.0);
-
-    xloadcols();
-    redraw();
-}
-
 void zoom(const Arg* arg) {
     Arg larg;
 
@@ -367,14 +352,6 @@ int evrow(XEvent* e) {
     int y = e->xbutton.y - win.vborderpx;
     LIMIT(y, 0, win.th - 1);
     return y / win.ch;
-}
-
-float clamp(float value, float lower, float upper) {
-    if (value < lower)
-        return lower;
-    if (value > upper)
-        return upper;
-    return value;
 }
 
 void mousesel(XEvent* e, int done) {
@@ -744,7 +721,7 @@ void xresize(int col, int row) {
     win.th = row * win.ch;
 
     XFreePixmap(xw.dpy, xw.buf);
-    xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h, xw.depth);
+    xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h, DefaultDepth(xw.dpy, xw.scr));
     XftDrawChange(xw.draw, xw.buf);
     xclear(0, 0, win.w, win.h);
 
@@ -778,23 +755,17 @@ int xloadcolor(int i, const char* name, Color* ncolor) {
     return XftColorAllocName(xw.dpy, xw.vis, xw.cmap, name, ncolor);
 }
 
-void xloadalpha(void) {
-    float const usedAlpha = focused ? alpha : alphaUnfocus;
-    if (opt_alpha)
-        alpha = strtof(opt_alpha, NULL);
-    dc.col[defaultbg].color.alpha = (unsigned short)(0xffff * usedAlpha);
-    dc.col[defaultbg].pixel &= 0x00FFFFFF;
-    dc.col[defaultbg].pixel |= (unsigned char)(0xff * usedAlpha) << 24;
-}
-
 void xloadcols(void) {
     int i;
     static int loaded;
-    /* Color* cp; */
+    Color* cp;
 
     if (!loaded) {
         dc.collen = 1 + (defaultbg = MAX(LEN(colorname), 256));
         dc.col = xmalloc(dc.collen * sizeof(Color));
+    } else {
+        for (cp = dc.col; cp < &dc.col[dc.collen]; ++cp)
+            XftColorFree(xw.dpy, xw.vis, xw.cmap, cp);
     }
 
     for (i = 0; i + 1 < dc.collen; i++)
@@ -808,7 +779,6 @@ void xloadcols(void) {
     if (dc.collen) // cannot die, as the color is already loaded.
         xloadcolor(background, NULL, &dc.col[defaultbg]);
 
-    xloadalpha();
     loaded = 1;
 }
 
@@ -1186,21 +1156,9 @@ void xinit(int cols, int rows) {
     Window parent;
     pid_t thispid = getpid();
     XColor xmousefg, xmousebg;
-    XWindowAttributes attr;
-    XVisualInfo vis;
 
     xw.scr = XDefaultScreen(xw.dpy);
-
-    if (!(opt_embed && (parent = strtol(opt_embed, NULL, 0)))) {
-        parent = XRootWindow(xw.dpy, xw.scr);
-        xw.depth = 32;
-    } else {
-        XGetWindowAttributes(xw.dpy, parent, &attr);
-        xw.depth = attr.depth;
-    }
-
-    XMatchVisualInfo(xw.dpy, xw.scr, xw.depth, TrueColor, &vis);
-    xw.vis = vis.visual;
+    xw.vis = XDefaultVisual(xw.dpy, xw.scr);
 
     /* font */
     if (!FcInit())
@@ -1213,7 +1171,7 @@ void xinit(int cols, int rows) {
     xloadsparefonts();
 
     /* colors */
-    xw.cmap = XCreateColormap(xw.dpy, parent, xw.vis, None);
+    xw.cmap = XDefaultColormap(xw.dpy, xw.scr);
     xloadcols();
 
     /* adjust fixed window geometry */
@@ -1231,15 +1189,17 @@ void xinit(int cols, int rows) {
     xw.attrs.event_mask = FocusChangeMask | KeyPressMask | KeyReleaseMask | ExposureMask | VisibilityChangeMask | StructureNotifyMask | ButtonMotionMask | ButtonPressMask | ButtonReleaseMask;
     xw.attrs.colormap = xw.cmap;
 
+	if (!(opt_embed && (parent = strtol(opt_embed, NULL, 0))))
+		parent = XRootWindow(xw.dpy, xw.scr);
     xw.win = XCreateWindow(xw.dpy, parent, xw.l, xw.t, win.w, win.h, 0,
-        xw.depth, InputOutput, xw.vis,
+        XDefaultDepth(xw.dpy, xw.scr), InputOutput, xw.vis,
         CWBackPixel | CWBorderPixel | CWBitGravity | CWEventMask | CWColormap,
         &xw.attrs);
 
     memset(&gcvalues, 0, sizeof(gcvalues));
     gcvalues.graphics_exposures = False;
-    xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h, xw.depth);
-    dc.gc = XCreateGC(xw.dpy, xw.buf, GCGraphicsExposures, &gcvalues);
+    dc.gc = XCreateGC(xw.dpy, parent, GCGraphicsExposures, &gcvalues);
+    xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h, DefaultDepth(xw.dpy, xw.scr));
     XSetForeground(xw.dpy, dc.gc, dc.col[defaultbg].pixel);
     XFillRectangle(xw.dpy, xw.buf, dc.gc, 0, 0, win.w, win.h);
 
@@ -2164,9 +2124,6 @@ int main(int argc, char* argv[]) {
     case 'a':
         allowaltscreen = 0;
         break;
-    case 'A':
-        opt_alpha = EARGF(usage());
-        break;
     case 'c':
         opt_class = EARGF(usage());
         break;
@@ -2224,7 +2181,6 @@ run:
     cols = MAX(cols, 1);
     rows = MAX(rows, 1);
     defaultbg = MAX(LEN(colorname), 256);
-    alphaUnfocus = alpha - alphaOffset;
     tnew(cols, rows);
     xinit(cols, rows);
     xsetenv();
