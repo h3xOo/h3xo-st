@@ -120,19 +120,6 @@ const char* termname = "st-256color";
  */
 const unsigned int tabspaces = 4;
 
-/* bg opacity */
-// float alpha = 0.85;
-// float alphaOffset = -0.05;
-// float alphaUnfocus;
-
-float alpha = 1.0;
-const float alphaOffset = 0;
-float alphaUnfocus = 0;
-
-// float alpha = 0.8;
-// float alphaOffset = -0.05;
-// float alphaUnfocus;
-
 /* Terminal colors (16 first used in escape sequence) */
 static const char* colorname[] = {
 
@@ -289,8 +276,6 @@ static const ResourcePref resources[] = {
     { "borderpx", INTEGER, &borderpx },
     { "cwscale", FLOAT, &cwscale },
     { "chscale", FLOAT, &chscale },
-    { "alpha", FLOAT, &alpha },
-    { "alphaOffset", FLOAT, &alphaOffset },
 };
 
 /*
@@ -345,8 +330,6 @@ static const Shortcut shortcuts[] = {
     { MODKEY, XK_Down, kscrolldown, { .i = 1 } },
     { MODKEY, XK_u, kscrollup, { .i = -1 } },
     { MODKEY, XK_d, kscrolldown, { .i = -1 } },
-    { MODKEY, XK_s, changealpha, { .f = -0.05 } },
-    { MODKEY, XK_a, changealpha, { .f = +0.05 } },
     { TERMMOD, XK_Up, zoom, { .f = +1 } },
     { TERMMOD, XK_Down, zoom, { .f = -1 } },
     { TERMMOD, XK_K, zoom, { .f = +1 } },
