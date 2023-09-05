@@ -126,7 +126,7 @@ typedef struct {
 
 typedef struct {
     Atom xtarget;
-    char *primary, *clipboard;
+    char* primary, *clipboard;
     struct timespec tclick1;
     struct timespec tclick2;
 } XSelection;
@@ -196,7 +196,7 @@ static void bpress(XEvent*);
 static void bmotion(XEvent*);
 static void propnotify(XEvent*);
 static void selnotify(XEvent*);
-static void selclear_(XEvent*);
+/* static void selclear_(XEvent*); */
 static void selrequest(XEvent*);
 static void setsel(char*, Time);
 static void mousesel(XEvent*, int);
@@ -504,15 +504,14 @@ void propnotify(XEvent* e) {
     Atom clipboard = XInternAtom(xw.dpy, "CLIPBOARD", 0);
 
     xpev = &e->xproperty;
-    if (xpev->state == PropertyNewValue && (xpev->atom == XA_PRIMARY || xpev->atom == clipboard)) {
+    if (xpev->state == PropertyNewValue && (xpev->atom == XA_PRIMARY || xpev->atom == clipboard))
         selnotify(e);
-    }
 }
 
 void selnotify(XEvent* e) {
     ulong nitems, ofs, rem;
     int format;
-    uchar *data, *last, *repl;
+    uchar* data, *last, *repl;
     Atom type, incratom, property = None;
 
     incratom = XInternAtom(xw.dpy, "INCR", 0);
@@ -570,9 +569,8 @@ void selnotify(XEvent* e) {
          */
         repl = data;
         last = data + nitems * format / 8;
-        while ((repl = memchr(repl, '\n', last - repl))) {
+        while ((repl = memchr(repl, '\n', last - repl)))
             *repl++ = '\r';
-        }
 
         if (IS_SET(MODE_BRCKTPASTE) && ofs == 0)
             ttywrite("\033[200~", 6, 0);
@@ -595,10 +593,10 @@ void xclipcopy(void) {
     clipcopy(NULL);
 }
 
-void selclear_(XEvent* e) {
+/* void selclear_(XEvent* e) {
     (void)e;
     selclear();
-}
+} */
 
 void selrequest(XEvent* e) {
     XSelectionRequestEvent* xsre;
@@ -622,8 +620,7 @@ void selrequest(XEvent* e) {
     if (xsre->target == xa_targets) {
         /* respond with the supported type */
         string = xsel.xtarget;
-        XChangeProperty(xsre->display, xsre->requestor, xsre->property, XA_ATOM,
-            32, PropModeReplace, (uchar*)&string, 1);
+        XChangeProperty(xsre->display, xsre->requestor, xsre->property, XA_ATOM, 32, PropModeReplace, (uchar*)&string, 1);
         xev.property = xsre->property;
     } else if (xsre->target == xsel.xtarget || xsre->target == XA_STRING) {
         /*
@@ -1110,8 +1107,7 @@ int ximopen(Display* dpy) {
         return 0;
 
     if (XSetIMValues(xw.ime.xim, XNDestroyCallback, &imdestroy, NULL))
-        fprintf(stderr, "XSetIMValues: "
-                        "Could not set XNDestroyCallback.\n");
+        fprintf(stderr, "XSetIMValues: Could not set XNDestroyCallback.\n");
 
     xw.ime.spotlist = XVaCreateNestedList(0, XNSpotLocation, &xw.ime.spot, NULL);
 
@@ -1240,8 +1236,7 @@ void xinit(int cols, int rows) {
     XSetWMProtocols(xw.dpy, xw.win, &xw.wmdeletewin, 1);
 
     xw.netwmpid = XInternAtom(xw.dpy, "_NET_WM_PID", False);
-    XChangeProperty(xw.dpy, xw.win, xw.netwmpid, XA_CARDINAL, 32,
-        PropModeReplace, (uchar*)&thispid, 1);
+    XChangeProperty(xw.dpy, xw.win, xw.netwmpid, XA_CARDINAL, 32, PropModeReplace, (uchar*)&thispid, 1);
 
     win.mode = MODE_NUMLOCK;
     resettitle();
@@ -1298,7 +1293,7 @@ int xmakeglyphfontspecs(XftGlyphFontSpec* specs, const Glyph* glyphs, int len, i
         mode = glyphs[i].mode;
 
         /* Skip dummy wide-character spacing. */
-        if (mode & ATTR_WDUMMY && i < (len - 1))
+        if ((mode & ATTR_WDUMMY) && i < (len - 1))
             continue;
 
         if (prevmode != mode || ATTRCMP(glyphs[start], glyphs[i]) || selected(x + i, y) != selected(x + start, y) || i == (len - 1)) {
@@ -1352,12 +1347,12 @@ int xmakeglyphfontspecs(XftGlyphFontSpec* specs, const Glyph* glyphs, int len, i
                         if (glyphidx && frc[f].flags == frcflags)
                             break;
                         /* We got a default font for a not found glyph. */
-                        if (!glyphidx && frc[f].flags == frcflags && frc[f].unicodep == rune) {
+                        if (!glyphidx && frc[f].flags == frcflags && frc[f].unicodep == rune)
                             break;
-                        }
                     }
 
-                    /* Nothing was found. Use fontconfig to find matching font.
+                    /*
+                     * Nothing was found. Use fontconfig to find matching font.
                      */
                     if (f >= frclen) {
                         if (!font->set)
@@ -1546,23 +1541,20 @@ void xdrawglyphfontspecs(const XftGlyphFontSpec* specs, Glyph base, int len, int
     }
 
 	if (dmode & DRAW_FG) {
-		if (base.mode & ATTR_BOXDRAW) {
+		if (base.mode & ATTR_BOXDRAW)
 			drawboxes(winx, winy, width / len, win.ch, fg, bg, specs, len);
-		} else {
+		else
 			/* Render the glyphs. */
 			XftDrawGlyphFontSpec(xw.draw, fg, specs, len);
-		}
 
 		/* Render underline and strikethrough. */
-		if (base.mode & ATTR_UNDERLINE) {
+		if (base.mode & ATTR_UNDERLINE)
 			XftDrawRect(xw.draw, fg, winx, winy + dc.font.ascent + 1,
 					width, 1);
-		}
 
-		if (base.mode & ATTR_STRUCK) {
+		if (base.mode & ATTR_STRUCK)
 			XftDrawRect(xw.draw, fg, winx, winy +  2 * dc.font.ascent / 3,
 					width, 1);
-		}
     }
 
     /* Reset clip to none. */
