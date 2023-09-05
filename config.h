@@ -20,7 +20,10 @@ static const char* font = "JetBrainsMono Nerd Font:pixelsize=20:antialias=true:a
 /* static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true"; */
 /* static char* font = "SauceCodePro Nerd Font:pixelsize=20:antialias=true:autohint=true"; */
 /* static char* font = "FiraCode:pixelsize=20:antialias=true:autohint=true"; */
-static char* font2[] = { "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
+static char* font2[] = {
+    "Hack Nerd Font Mono:pixelsize=16:antialias=true:autohint=true",
+    "JoyPixels:pixelsize=16:antialias=true:autohint=true"
+};
 static int borderpx = 4;
 
 /*
