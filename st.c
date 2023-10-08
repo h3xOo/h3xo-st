@@ -2436,7 +2436,10 @@ check_control_code:
     gp = &term.line[term.c.y][term.c.x];
     if (IS_SET(MODE_WRAP) && (term.c.state & CURSOR_WRAPNEXT)) {
         gp->mode |= ATTR_WRAP;
-        tnewline(1);
+        if (IS_SET(MODE_WRAP))
+            tnewline(1);
+        else
+            tmoveto(term.col - width, term.c.y);
         gp = &term.line[term.c.y][term.c.x];
     }
 
