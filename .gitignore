@@ -1,3 +1,5 @@
 *.o
 st
 .ccls-cache/
+.cache/
+compile_commands.json
