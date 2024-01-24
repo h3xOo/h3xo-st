@@ -17,8 +17,10 @@
 #include <unistd.h>
 #include <wchar.h>
 
+// clang-format off
 #include "st.h"
 #include "win.h"
+// clang-format on
 
 #if defined(__linux)
 #include <pty.h>

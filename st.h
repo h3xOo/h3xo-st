@@ -7,20 +7,19 @@
 #include <sys/types.h>
 
 /* macros */
-#define MIN(a, b)   ((a) < (b) ? (a) : (b))
-#define MAX(a, b)   ((a) < (b) ? (b) : (a))
-#define LEN(a)      (sizeof(a) / sizeof(a)[0])
+#define MIN(a, b)           ((a) < (b) ? (a) : (b))
+#define MAX(a, b)           ((a) < (b) ? (b) : (a))
+#define LEN(a)              (sizeof(a) / sizeof(a)[0])
 #define BETWEEN(x, a, b)    ((a) <= (x) && (x) <= (b))
 #define DIVCEIL(n, d)       (((n) + ((d)-1)) / (d))
 #define DEFAULT(a, b)       (a) = (a) ? (a) : (b)
-#define LIMIT(x, a, b)      (x) = (x) < (a) ? (a) : (x) > (b) ? (b) \
-                                                         : (x)
-#define ATTRCMP(a, b) (((a).mode & (~ATTR_WRAP)) != ((b).mode & (~ATTR_WRAP)) || (a).fg != (b).fg || (a).bg != (b).bg)
-#define TIMEDIFF(t1, t2) ((t1.tv_sec - t2.tv_sec) * 1000 + (t1.tv_nsec - t2.tv_nsec) / 1E6)
+#define LIMIT(x, a, b)      (x) = (x) < (a) ? (a) : (x) > (b) ? (b) : (x)
+#define ATTRCMP(a, b)       (((a).mode & (~ATTR_WRAP)) != ((b).mode & (~ATTR_WRAP)) || (a).fg != (b).fg || (a).bg != (b).bg)
+#define TIMEDIFF(t1, t2)    ((t1.tv_sec - t2.tv_sec) * 1000 + (t1.tv_nsec - t2.tv_nsec) / 1E6)
 #define MODBIT(x, set, bit) ((set) ? ((x) |= (bit)) : ((x) &= ~(bit)))
 
 #define TRUECOLOR(r, g, b) (1 << 24 | (r) << 16 | (g) << 8 | (b))
-#define IS_TRUECOL(x) (1 << 24 & (x))
+#define IS_TRUECOL(x)      (1 << 24 & (x))
 
 enum glyph_attribute {
     ATTR_NULL = 0,
@@ -70,45 +69,45 @@ typedef uint_least32_t Rune;
 
 #define Glyph Glyph_
 typedef struct {
-    Rune u; /* character code */
+    Rune u;      /* character code */
     ushort mode; /* attribute flags */
     uint32_t fg; /* foreground  */
     uint32_t bg; /* background  */
 } Glyph;
 
-typedef Glyph* Line;
+typedef Glyph *Line;
 
 typedef union {
     int i;
     uint ui;
     float f;
-    const void* v;
-    const char* s;
+    void const *v;
+    char const *s;
 } Arg;
 
-void die(const char*, ...);
+void die(char const *, ...);
 void redraw(void);
 void tfulldirt(void);
 void draw(void);
 
-void externalpipe(const Arg*);
-void kscrolldown(const Arg*);
-void kscrollup(const Arg*);
+void externalpipe(Arg const *);
+void kscrolldown(Arg const *);
+void kscrollup(Arg const *);
 
-void printscreen(const Arg*);
-void printsel(const Arg*);
-void sendbreak(const Arg*);
-void toggleprinter(const Arg*);
+void printscreen(Arg const *);
+void printsel(Arg const *);
+void sendbreak(Arg const *);
+void toggleprinter(Arg const *);
 
 int tattrset(int);
 void tnew(int, int);
 void tresize(int, int);
 void tsetdirtattr(int);
 void ttyhangup(void);
-int ttynew(const char*, const char*, const char*, char**);
+int ttynew(char const *, char const *, char const *, char **);
 size_t ttyread(void);
 void ttyresize(int, int);
-void ttywrite(const char*, size_t, int);
+void ttywrite(char const *, size_t, int);
 
 void resettitle(void);
 
@@ -117,35 +116,35 @@ void selinit(void);
 void selstart(int, int, int);
 void selextend(int, int, int, int);
 int selected(int, int);
-char* getsel(void);
+char *getsel(void);
 
-size_t utf8encode(Rune, char*);
+size_t utf8encode(Rune, char *);
 
-void* xmalloc(size_t);
-void* xrealloc(void*, size_t);
-char* xstrdup(const char*);
+void *xmalloc(size_t);
+void *xrealloc(void *, size_t);
+char *xstrdup(char const *);
 
 int isboxdraw(Rune);
-ushort boxdrawindex(const Glyph*);
+ushort boxdrawindex(Glyph const *);
 #ifdef XFT_VERSION
 /* only exposed to x.c, otherwise we'll need Xft.h for the types */
-void boxdraw_xinit(Display*, Colormap, XftDraw*, Visual*);
-void drawboxes(int, int, int, int, XftColor*, XftColor*, const XftGlyphFontSpec*, int);
+void boxdraw_xinit(Display *, Colormap, XftDraw *, Visual *);
+void drawboxes(int, int, int, int, XftColor *, XftColor *, XftGlyphFontSpec const *, int);
 #endif
 
 /* config.h globals */
-extern const char* utmp;
-extern const char* scroll;
-extern const char* stty_args;
-extern const char* vtiden;
-extern const wchar_t* worddelimiters;
+extern char const *utmp;
+extern char const *scroll;
+extern char const *stty_args;
+extern char const *vtiden;
+extern wchar_t const *worddelimiters;
 extern int allowaltscreen;
-extern const int allowwindowops;
-extern const char* termname;
-extern const unsigned int tabspaces;
-extern const unsigned int defaultfg;
+extern int const allowwindowops;
+extern char const *termname;
+extern unsigned int const tabspaces;
+extern unsigned int const defaultfg;
 extern unsigned int defaultbg;
-extern const int boxdraw, boxdraw_bold, boxdraw_braille;
-extern const unsigned int defaultcs;
+extern int const boxdraw, boxdraw_bold, boxdraw_braille;
+extern unsigned int const defaultcs;
 
 #endif /* ST_H__ */
