@@ -5,6 +5,7 @@ VERSION = 0.9
 
 # paths
 PREFIX = /usr/local
+APPPREFIX = $(PREFIX)/share/applications
 MANPREFIX = $(PREFIX)/share/man
 
 X11INC = /usr/include/X11
