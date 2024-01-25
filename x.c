@@ -17,7 +17,7 @@
 #include <unistd.h>
 
 // clang-format off
-static char* argv0;
+static char *argv0;
 #include "arg.h"
 #include "hb.h"
 #include "st.h"
