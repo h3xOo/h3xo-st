@@ -5,10 +5,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-// clang-format off
+
+/* We turn off clang-format because suckless can't handle circural dependencies */
+/* clang-format off */
 #include "st.h"
 #include "hb.h"
-// clang-format on
+/* clang-format on */
 
 #define FEATURE(c1, c2, c3, c4)                                                \
 	{                                                                      \

@@ -3,11 +3,12 @@
  * https://github.com/avih MIT/X Consortium License
  */
 
-// clang-format off
+/* We turn off clang-format because suckless can't handle circural dependencies */
+/* clang-format off */
 #include <X11/Xft/Xft.h>
 #include "boxdraw_data.h"
 #include "st.h"
-// clang-format on
+/* clang-format on */
 
 /* Rounded non-negative integers division of n / d  */
 #define DIV(n, d) (((n) + (d) / 2) / (d))
