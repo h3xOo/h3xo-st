@@ -16,13 +16,14 @@
 #include <time.h>
 #include <unistd.h>
 
-// clang-format off
+/* We turn off clang-format because suckless can't handle circural dependencies */
+/* clang-format off */
 static char *argv0;
 #include "arg.h"
 #include "hb.h"
 #include "st.h"
 #include "win.h"
-// clang-format on
+/* clang-format on */
 
 /* types used in config.h */
 typedef struct {
