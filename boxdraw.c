@@ -78,7 +78,8 @@ void drawbox(int x, int y, int w, int h, XftColor *fg, XftColor *bg, ushort bd)
 		XftDrawRect(xd, fg, x + d, y, w - d, h);
 	} else if (cat == BBQ) {
 		/* Quadrants */
-		int w2 = DIV(w, 2), h2 = DIV(h, 2);
+		int w2 = DIV(w, 2);
+		int h2 = DIV(h, 2);
 		if (bd & TL)
 			XftDrawRect(xd, fg, x, y, w2, h2);
 		if (bd & TR)
@@ -105,7 +106,9 @@ void drawbox(int x, int y, int w, int h, XftColor *fg, XftColor *bg, ushort bd)
 	} else if (cat == BRL) {
 		/* braille, each data bit corresponds to one dot at 2x4 grid */
 		int w1 = DIV(w, 2);
-		int h1 = DIV(h, 4), h2 = DIV(h, 2), h3 = DIV(3 * h, 4);
+		int h1 = DIV(h, 4);
+		int h2 = DIV(h, 2);
+		int h3 = DIV(3 * h, 4);
 
 		if (bd & 1)
 			XftDrawRect(xd, fg, x, y, w1, h1);
@@ -135,7 +138,8 @@ void drawboxlines(int x, int y, int w, int h, XftColor *fg, ushort bd)
 	int base_s = MAX(1, DIV(mwh, 8));
 	int bold = (bd & BDB) && mwh >= 6; /* possibly ignore boldness */
 	int s = bold ? MAX(base_s + 1, DIV(3 * base_s, 2)) : base_s;
-	int w2 = DIV(w - s, 2), h2 = DIV(h - s, 2);
+	int w2 = DIV(w - s, 2);
+	int h2 = DIV(h - s, 2);
 	/* the s-by-s square (x + w2, y + h2, s, s) is the center texel.    */
 	/* The base length (per direction till edge) includes this square.  */
 
@@ -170,26 +174,33 @@ void drawboxlines(int x, int y, int w, int h, XftColor *fg, ushort bd)
                  * which consider other doubles - shorter to avoid intersections
                  * (p, n), or longer to draw the far-corner texel (n).
                  */
-		int dl = bd & DL, du = bd & DU, dr = bd & DR, dd = bd & DD;
+		int dl = bd & DL;
+		int du = bd & DU;
+		int dr = bd & DR;
+		int dd = bd & DD;
 		if (dl) {
-			int p = dd ? -s : 0, n = du ? -s : dd ? s : 0;
+			int p = dd ? -s : 0;
+			int n = du ? -s : dd ? s : 0;
 			XftDrawRect(xd, fg, x, y + h2 + s, w2 + s + p, s);
 			XftDrawRect(xd, fg, x, y + h2 - s, w2 + s + n, s);
 		}
 		if (du) {
-			int p = dl ? -s : 0, n = dr ? -s : dl ? s : 0;
+			int p = dl ? -s : 0;
+			int n = dr ? -s : dl ? s : 0;
 			XftDrawRect(xd, fg, x + w2 - s, y, s, h2 + s + p);
 			XftDrawRect(xd, fg, x + w2 + s, y, s, h2 + s + n);
 		}
 		if (dr) {
-			int p = du ? -s : 0, n = dd ? -s : du ? s : 0;
+			int p = du ? -s : 0;
+			int n = dd ? -s : du ? s : 0;
 			XftDrawRect(xd, fg, x + w2 - p, y + h2 - s, w - w2 + p,
 				    s);
 			XftDrawRect(xd, fg, x + w2 - n, y + h2 + s, w - w2 + n,
 				    s);
 		}
 		if (dd) {
-			int p = dr ? -s : 0, n = dl ? -s : dr ? s : 0;
+			int p = dr ? -s : 0;
+			int n = dl ? -s : dr ? s : 0;
 			XftDrawRect(xd, fg, x + w2 + s, y + h2 - p, s,
 				    h - h2 + p);
 			XftDrawRect(xd, fg, x + w2 - s, y + h2 - n, s,

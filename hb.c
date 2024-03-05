@@ -3,6 +3,7 @@
 #include <hb-ft.h>
 #include <hb.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -48,7 +49,7 @@ static RuneBuffer hbrunebuffer = { 0, NULL };
 static hb_feature_t features[] = { FEATURE('c', 'a', 'l', 't'),
 				   FEATURE('d', 'l', 'i', 'g') };
 
-void hbunloadfonts()
+void hbunloadfonts(void)
 {
 	for (int i = 0; i < hbfontcache.capacity; i++) {
 		hb_font_destroy(hbfontcache.fonts[i].font);
@@ -92,7 +93,9 @@ void hbtransform(HbTransformData *data, XftFont *xfont, Glyph const *glyphs,
 {
 	ushort mode = USHRT_MAX;
 	unsigned int glyph_count;
-	int rune_idx, glyph_idx, end = start + length;
+	int rune_idx;
+	int glyph_idx;
+	int end = start + length;
 
 	hb_font_t *font = hbfindfont(xfont);
 	if (font == NULL)
@@ -104,7 +107,7 @@ void hbtransform(HbTransformData *data, XftFont *xfont, Glyph const *glyphs,
 	/* Resize the buffer if required length is larger. */
 	if (hbrunebuffer.capacity < length) {
 		hbrunebuffer.capacity =
-			(length / BUFFER_STEP + 1) * BUFFER_STEP;
+			((long)length / BUFFER_STEP + 1) * BUFFER_STEP;
 		hbrunebuffer.runes =
 			(Rune *)realloc(hbrunebuffer.runes,
 					hbrunebuffer.capacity * sizeof(Rune));
