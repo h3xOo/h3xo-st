@@ -46,15 +46,9 @@
 #define ISCONTROLC1(c) (BETWEEN(c, 0x80, 0x9f))
 #define ISCONTROL(c)   (ISCONTROLC0(c) || ISCONTROLC1(c))
 #define ISDELIM(u)     (u && wcschr(worddelimiters, u))
-#define TLINE(y)                                                            \
-	((y) < term.scr                                                     \
-		 ? term.hist[((y) + term.histi - term.scr + HISTSIZE + 1) % \
-			     HISTSIZE]                                      \
-		 : term.line[(y)-term.scr])
-#define TLINE_HIST(y)                   \
-	((y) <= HISTSIZE - term.row + 2 \
-		 ? term.hist[(y)]       \
-		 : term.line[(y - HISTSIZE + term.row - 3)])
+#define TLINE(y) \
+	((y) < term.scr ? term.hist[((y) + term.histi - term.scr + HISTSIZE + 1) % HISTSIZE] : term.line[(y)-term.scr])
+#define TLINE_HIST(y)	 ((y) <= HISTSIZE - term.row + 2 ? term.hist[(y)] : term.line[(y - HISTSIZE + term.row - 3)])
 #define STRESCARGREST(n) ((n) == 0 ? strescseq.buf : strescseq.argp[(n)-1] + 1)
 #define STRESCARGJUST(n) (*(strescseq.argp[n]) = '\0', STRESCARGREST(n))
 
@@ -248,8 +242,7 @@ static pid_t pid;
 static uchar const utfbyte[UTF_SIZ + 1] = { 0x80, 0, 0xC0, 0xE0, 0xF0 };
 static uchar const utfmask[UTF_SIZ + 1] = { 0xC0, 0x80, 0xE0, 0xF0, 0xF8 };
 static Rune const utfmin[UTF_SIZ + 1] = { 0, 0, 0x80, 0x800, 0x10000 };
-static Rune const utfmax[UTF_SIZ + 1] = { 0x10FFFF, 0x7F, 0x7FF, 0xFFFF,
-					  0x10FFFF };
+static Rune const utfmax[UTF_SIZ + 1] = { 0x10FFFF, 0x7F, 0x7FF, 0xFFFF, 0x10FFFF };
 
 static ssize_t xwrite(int fd, char const *s, size_t len)
 {
@@ -372,12 +365,10 @@ static char *base64dec(char const *src)
 	size_t in_len = strlen(src);
 	char *result, *dst;
 	static char const base64_digits[256] = {
-		[43] = 62, 0,  0,  0,  63, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-		61,	   0,  0,  0,  -1, 0,  0,  0,  0,  1,  2,  3,  4,  5,
-		6,	   7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-		20,	   21, 22, 23, 24, 25, 0,  0,  0,  0,  0,  0,  26, 27,
-		28,	   29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
-		42,	   43, 44, 45, 46, 47, 48, 49, 50, 51
+		[43] = 62, 0,  0,  0,  63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 0,  0,  0,  -1, 0,
+		0,	   0,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+		18,	   19, 20, 21, 22, 23, 24, 25, 0,  0,  0,  0,  0,  0,  26, 27, 28, 29, 30, 31,
+		32,	   33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
 	};
 
 	if (in_len % 4)
@@ -476,8 +467,7 @@ void selextend(int col, int row, int type, int done)
 	selnormalize();
 	sel.type = type;
 
-	if (oldey != sel.oe.y || oldex != sel.oe.x || oldtype != sel.type ||
-	    sel.mode == SEL_EMPTY)
+	if (oldey != sel.oe.y || oldex != sel.oe.x || oldtype != sel.type || sel.mode == SEL_EMPTY)
 		tsetdirt(MIN(sel.nb.y, oldsby), MAX(sel.ne.y, oldsey));
 
 	sel.mode = done ? SEL_IDLE : SEL_READY;
@@ -512,17 +502,13 @@ static void selnormalize(void)
 
 int selected(int x, int y)
 {
-	if (sel.mode == SEL_EMPTY || sel.ob.x == -1 ||
-	    sel.alt != IS_SET(MODE_ALTSCREEN))
+	if (sel.mode == SEL_EMPTY || sel.ob.x == -1 || sel.alt != IS_SET(MODE_ALTSCREEN))
 		return 0;
 
 	if (sel.type == SEL_RECTANGULAR)
-		return BETWEEN(y, sel.nb.y, sel.ne.y) &&
-		       BETWEEN(x, sel.nb.x, sel.ne.x);
+		return BETWEEN(y, sel.nb.y, sel.ne.y) && BETWEEN(x, sel.nb.x, sel.ne.x);
 
-	return BETWEEN(y, sel.nb.y, sel.ne.y) &&
-	       (y != sel.nb.y || x >= sel.nb.x) &&
-	       (y != sel.ne.y || x <= sel.ne.x);
+	return BETWEEN(y, sel.nb.y, sel.ne.y) && (y != sel.nb.y || x >= sel.nb.x) && (y != sel.ne.y || x <= sel.ne.x);
 }
 
 static void selsnap(int *x, int *y, int direction)
@@ -561,9 +547,7 @@ static void selsnap(int *x, int *y, int direction)
 
 			gp = &TLINE(newy)[newx];
 			delim = ISDELIM(gp->u);
-			if (!(gp->mode & ATTR_WDUMMY) &&
-			    (delim != prevdelim ||
-			     (delim && gp->u != prevgp->u)))
+			if (!(gp->mode & ATTR_WDUMMY) && (delim != prevdelim || (delim && gp->u != prevgp->u)))
 				break;
 
 			*x = newx;
@@ -581,15 +565,13 @@ static void selsnap(int *x, int *y, int direction)
 		*x = (direction < 0) ? 0 : term.col - 1;
 		if (direction < 0) {
 			for (; *y > 0; *y += direction) {
-				if (!(TLINE(*y - 1)[term.col - 1].mode &
-				      ATTR_WRAP)) {
+				if (!(TLINE(*y - 1)[term.col - 1].mode & ATTR_WRAP)) {
 					break;
 				}
 			}
 		} else if (direction > 0) {
 			for (; *y < term.row - 1; *y += direction) {
-				if (!(TLINE(*y)[term.col - 1].mode &
-				      ATTR_WRAP)) {
+				if (!(TLINE(*y)[term.col - 1].mode & ATTR_WRAP)) {
 					break;
 				}
 			}
@@ -644,8 +626,7 @@ char *getsel(void)
                  * st.
                  * FIXME: Fix the computer world.
                  */
-		if ((y < sel.ne.y || lastx >= linelen) &&
-		    (!(last->mode & ATTR_WRAP) || sel.type == SEL_RECTANGULAR))
+		if ((y < sel.ne.y || lastx >= linelen) && (!(last->mode & ATTR_WRAP) || sel.type == SEL_RECTANGULAR))
 			*ptr++ = '\n';
 	}
 	*ptr = 0;
@@ -771,19 +752,15 @@ int ttynew(char const *line, char const *cmd, char const *out, char **args)
 
 	if (out) {
 		term.mode |= MODE_PRINT;
-		iofd = (!strcmp(out, "-"))
-			       ? 1
-			       : open(out, O_WRONLY | O_CREAT, 0666);
+		iofd = (!strcmp(out, "-")) ? 1 : open(out, O_WRONLY | O_CREAT, 0666);
 		if (iofd < 0) {
-			fprintf(stderr, "Error opening %s:%s\n", out,
-				strerror(errno));
+			fprintf(stderr, "Error opening %s:%s\n", out, strerror(errno));
 		}
 	}
 
 	if (line) {
 		if ((cmdfd = open(line, O_RDWR)) < 0)
-			die("open line '%s' failed: %s\n", line,
-			    strerror(errno));
+			die("open line '%s' failed: %s\n", line, strerror(errno));
 		dup2(cmdfd, 0);
 		stty(args);
 		return cmdfd;
@@ -947,8 +924,7 @@ void ttyresize(int tw, int th)
 	w.ws_xpixel = tw;
 	w.ws_ypixel = th;
 	if (ioctl(cmdfd, TIOCSWINSZ, &w) < 0)
-		fprintf(stderr, "Couldn't set window size: %s\n",
-			strerror(errno));
+		fprintf(stderr, "Couldn't set window size: %s\n", strerror(errno));
 }
 
 void ttyhangup(void)
@@ -1020,9 +996,7 @@ void treset(void)
 
 	term.c = (TCursor) {
 		{.mode = ATTR_NULL, .fg = defaultfg, .bg = defaultbg},
-		.x = 0,
-		.y = 0,
-		.state = CURSOR_DEFAULT
+		 .x = 0, .y = 0, .state = CURSOR_DEFAULT
 	};
 
 	memset(term.tabs, 0, term.col * sizeof(*term.tabs));
@@ -1152,14 +1126,12 @@ void selscroll(int orig, int n)
 	if (sel.ob.x == -1 || sel.alt != IS_SET(MODE_ALTSCREEN))
 		return;
 
-	if (BETWEEN(sel.nb.y, orig, term.bot) !=
-	    BETWEEN(sel.ne.y, orig, term.bot)) {
+	if (BETWEEN(sel.nb.y, orig, term.bot) != BETWEEN(sel.ne.y, orig, term.bot)) {
 		selclear();
 	} else if (BETWEEN(sel.nb.y, orig, term.bot)) {
 		sel.ob.y += n;
 		sel.oe.y += n;
-		if (sel.ob.y < term.top || sel.ob.y > term.bot ||
-		    sel.oe.y < term.top || sel.oe.y > term.bot) {
+		if (sel.ob.y < term.top || sel.ob.y > term.bot || sel.oe.y < term.top || sel.oe.y > term.bot) {
 			selclear();
 		} else {
 			selnormalize();
@@ -1247,8 +1219,7 @@ void tsetchar(Rune u, Glyph const *attr, int x, int y)
 	/*
          * The table is proudly stolen from rxvt.
          */
-	if (term.trantbl[term.charset] == CS_GRAPHIC0 &&
-	    BETWEEN(u, 0x41, 0x7e) && vt100_0[u - 0x41])
+	if (term.trantbl[term.charset] == CS_GRAPHIC0 && BETWEEN(u, 0x41, 0x7e) && vt100_0[u - 0x41])
 		utf8decode(vt100_0[u - 0x41], &u, UTF_SIZ);
 
 	if (term.line[y][x].mode & ATTR_WIDE) {
@@ -1360,10 +1331,8 @@ int32_t tdefcolor(int const *attr, int *npar, int l)
 		g = attr[*npar + 3];
 		b = attr[*npar + 4];
 		*npar += 4;
-		if (!BETWEEN(r, 0, 255) || !BETWEEN(g, 0, 255) ||
-		    !BETWEEN(b, 0, 255))
-			fprintf(stderr, "erresc: bad rgb color (%u,%u,%u)\n", r,
-				g, b);
+		if (!BETWEEN(r, 0, 255) || !BETWEEN(g, 0, 255) || !BETWEEN(b, 0, 255))
+			fprintf(stderr, "erresc: bad rgb color (%u,%u,%u)\n", r, g, b);
 		else
 			idx = TRUECOLOR(r, g, b);
 		break;
@@ -1377,8 +1346,7 @@ int32_t tdefcolor(int const *attr, int *npar, int l)
 		}
 		*npar += 2;
 		if (!BETWEEN(attr[*npar], 0, 255))
-			fprintf(stderr, "erresc: bad fgcolor %d\n",
-				attr[*npar]);
+			fprintf(stderr, "erresc: bad fgcolor %d\n", attr[*npar]);
 		else
 			idx = attr[*npar];
 		break;
@@ -1387,8 +1355,7 @@ int32_t tdefcolor(int const *attr, int *npar, int l)
 	case 3: /* direct color in CMY space */
 	case 4: /* direct color in CMYK space */
 	default:
-		fprintf(stderr, "erresc(38): gfx attr %d unknown\n",
-			attr[*npar]);
+		fprintf(stderr, "erresc(38): gfx attr %d unknown\n", attr[*npar]);
 		break;
 	}
 
@@ -1403,10 +1370,8 @@ void tsetattr(int const *attr, int l)
 	for (i = 0; i < l; i++) {
 		switch (attr[i]) {
 		case 0:
-			term.c.attr.mode &=
-				~(ATTR_BOLD | ATTR_FAINT | ATTR_ITALIC |
-				  ATTR_UNDERLINE | ATTR_BLINK | ATTR_REVERSE |
-				  ATTR_INVISIBLE | ATTR_STRUCK);
+			term.c.attr.mode &= ~(ATTR_BOLD | ATTR_FAINT | ATTR_ITALIC | ATTR_UNDERLINE | ATTR_BLINK |
+					      ATTR_REVERSE | ATTR_INVISIBLE | ATTR_STRUCK);
 			term.c.attr.fg = defaultfg;
 			term.c.attr.bg = defaultbg;
 			break;
@@ -1583,8 +1548,7 @@ void tsetmode(int priv, int set, int const *args, int narg)
 					break;
 				alt = IS_SET(MODE_ALTSCREEN);
 				if (alt) {
-					tclearregion(0, 0, term.col - 1,
-						     term.row - 1);
+					tclearregion(0, 0, term.col - 1, term.row - 1);
 				}
 				if (set ^ alt) /* set is always 1 or 0 */
 					tswapscreen();
@@ -1631,9 +1595,7 @@ void tsetmode(int priv, int set, int const *args, int narg)
 				MODBIT(term.mode, set, MODE_CRLF);
 				break;
 			default:
-				fprintf(stderr,
-					"erresc: unknown set/reset mode %d\n",
-					*args);
+				fprintf(stderr, "erresc: unknown set/reset mode %d\n", *args);
 				break;
 			}
 		}
@@ -1742,11 +1704,9 @@ unknown:
 	case 'J': /* ED -- Clear screen */
 		switch (csiescseq.arg[0]) {
 		case 0: /* below */
-			tclearregion(term.c.x, term.c.y, term.col - 1,
-				     term.c.y);
+			tclearregion(term.c.x, term.c.y, term.col - 1, term.c.y);
 			if (term.c.y < term.row - 1) {
-				tclearregion(0, term.c.y + 1, term.col - 1,
-					     term.row - 1);
+				tclearregion(0, term.c.y + 1, term.col - 1, term.row - 1);
 			}
 			break;
 		case 1: /* above */
@@ -1764,8 +1724,7 @@ unknown:
 	case 'K': /* EL -- Clear line */
 		switch (csiescseq.arg[0]) {
 		case 0: /* right */
-			tclearregion(term.c.x, term.c.y, term.col - 1,
-				     term.c.y);
+			tclearregion(term.c.x, term.c.y, term.col - 1, term.c.y);
 			break;
 		case 1: /* left */
 			tclearregion(0, term.c.y, term.c.x, term.c.y);
@@ -1798,8 +1757,7 @@ unknown:
 		break;
 	case 'X': /* ECH -- Erase <n> char */
 		DEFAULT(csiescseq.arg[0], 1);
-		tclearregion(term.c.x, term.c.y,
-			     term.c.x + csiescseq.arg[0] - 1, term.c.y);
+		tclearregion(term.c.x, term.c.y, term.c.x + csiescseq.arg[0] - 1, term.c.y);
 		break;
 	case 'P': /* DCH -- Delete <n> char */
 		DEFAULT(csiescseq.arg[0], 1);
@@ -1825,8 +1783,7 @@ unknown:
 			ttywrite("\033[0n", sizeof("\033[0n") - 1, 0);
 			break;
 		case 6: /* Report Cursor Position (CPR) "<row>;<column>R" */
-			len = snprintf(buf, sizeof(buf), "\033[%i;%iR",
-				       term.c.y + 1, term.c.x + 1);
+			len = snprintf(buf, sizeof(buf), "\033[%i;%iR", term.c.y + 1, term.c.x + 1);
 			ttywrite(buf, len, 0);
 			break;
 		default:
@@ -1924,18 +1881,16 @@ void osc_color_response(int num, int index, int is_osc4)
 	unsigned char r, g, b;
 
 	if (xgetcolor(is_osc4 ? num : index, &r, &g, &b)) {
-		fprintf(stderr, "erresc: failed to fetch %s color %d\n",
-			is_osc4 ? "osc4" : "osc", is_osc4 ? num : index);
+		fprintf(stderr, "erresc: failed to fetch %s color %d\n", is_osc4 ? "osc4" : "osc",
+			is_osc4 ? num : index);
 		return;
 	}
 
-	n = snprintf(buf, sizeof buf,
-		     "\033]%s%d;rgb:%02x%02x/%02x%02x/%02x%02x\007",
-		     is_osc4 ? "4;" : "", num, r, r, g, g, b, b);
+	n = snprintf(buf, sizeof buf, "\033]%s%d;rgb:%02x%02x/%02x%02x/%02x%02x\007", is_osc4 ? "4;" : "", num, r, r, g,
+		     g, b, b);
 	if (n < 0 || n >= sizeof(buf)) {
 		fprintf(stderr, "error: %s while printing %s response\n",
-			n < 0 ? "snprintf failed" : "truncation occurred",
-			is_osc4 ? "osc4" : "osc");
+			n < 0 ? "snprintf failed" : "truncation occurred", is_osc4 ? "osc4" : "osc");
 	} else {
 		ttywrite(buf, n, 1);
 	}
@@ -1950,8 +1905,8 @@ void strhandle(void)
 		char *str;
 	} osc_table[] = {
 		{defaultfg, "foreground"},
-		{defaultbg, "background"},
-		{defaultcs,     "cursor"}
+		     {defaultbg, "background"},
+		  {defaultcs,     "cursor"}
 	};
 
 	term.esc &= ~(ESC_STR_END | ESC_STR);
@@ -1983,8 +1938,7 @@ void strhandle(void)
 					xsetsel(dec);
 					xclipcopy();
 				} else {
-					fprintf(stderr,
-						"erresc: invalid base64\n");
+					fprintf(stderr, "erresc: invalid base64\n");
 				}
 			}
 			return;
@@ -2000,9 +1954,7 @@ void strhandle(void)
 			if (!strcmp(p, "?")) {
 				osc_color_response(par, osc_table[j].idx, 0);
 			} else if (xsetcolorname(osc_table[j].idx, p)) {
-				fprintf(stderr,
-					"erresc: invalid %s color: %s\n",
-					osc_table[j].str, p);
+				fprintf(stderr, "erresc: invalid %s color: %s\n", osc_table[j].str, p);
 			} else {
 				tfulldirt();
 			}
@@ -2022,9 +1974,7 @@ void strhandle(void)
 					xloadcols();
 					return; /* color reset without parameter */
 				}
-				fprintf(stderr,
-					"erresc: invalid color j=%d, p=%s\n", j,
-					p ? p : "(null)");
+				fprintf(stderr, "erresc: invalid color j=%d, p=%s\n", j, p ? p : "(null)");
 			} else {
 				/*
                                  * TODO if defaultbg color is changed, borders
@@ -2301,8 +2251,7 @@ void tcontrolcode(uchar ascii)
 		tputtab(1);
 		return;
 	case '\b': /* BS */
-		for (i = 1;
-		     term.c.x && term.line[term.c.y][term.c.x - i].u == 0; ++i)
+		for (i = 1; term.c.x && term.line[term.c.y][term.c.x - i].u == 0; ++i)
 			;
 		tmoveato(term.c.x - i, term.c.y);
 		return;
@@ -2474,8 +2423,8 @@ int eschandle(uchar ascii)
 			strhandle();
 		break;
 	default:
-		fprintf(stderr, "erresc: unknown sequence ESC 0x%02X '%c'\n",
-			(uchar)ascii, isprint(ascii) ? ascii : '.');
+		fprintf(stderr, "erresc: unknown sequence ESC 0x%02X '%c'\n", (uchar)ascii,
+			isprint(ascii) ? ascii : '.');
 		break;
 	}
 	return 1;
@@ -2508,8 +2457,7 @@ void tputc(Rune u)
          * character.
          */
 	if (term.esc & ESC_STR) {
-		if (u == '\a' || u == 030 || u == 032 || u == 033 ||
-		    ISCONTROLC1(u)) {
+		if (u == '\a' || u == 030 || u == 032 || u == 033 || ISCONTROLC1(u)) {
 			term.esc &= ~(ESC_START | ESC_STR);
 			term.esc |= ESC_STR_END;
 			goto check_control_code;
@@ -2560,8 +2508,7 @@ check_control_code:
 	} else if (term.esc & ESC_START) {
 		if (term.esc & ESC_CSI) {
 			csiescseq.buf[csiescseq.len++] = (char)u;
-			if (BETWEEN(u, 0x40, 0x7E) ||
-			    csiescseq.len >= sizeof(csiescseq.buf) - 1) {
+			if (BETWEEN(u, 0x40, 0x7E) || csiescseq.len >= sizeof(csiescseq.buf) - 1) {
 				term.esc = 0;
 				csiparse();
 				csihandle();
@@ -2600,8 +2547,7 @@ check_control_code:
 	}
 
 	if (IS_SET(MODE_INSERT) && term.c.x + width < term.col) {
-		memmove(gp + width, gp,
-			(term.col - term.c.x - width) * sizeof(Glyph));
+		memmove(gp + width, gp, (term.col - term.c.x - width) * sizeof(Glyph));
 		gp->mode &= ~ATTR_WIDE;
 	}
 
@@ -2616,8 +2562,7 @@ check_control_code:
 	if (width == 2) {
 		gp->mode |= ATTR_WIDE;
 		if (term.c.x + 1 < term.col) {
-			if (gp[1].mode == ATTR_WIDE &&
-			    term.c.x + 2 < term.col) {
+			if (gp[1].mode == ATTR_WIDE && term.c.x + 2 < term.col) {
 				gp[2].u = ' ';
 				gp[2].mode &= ~ATTR_WDUMMY;
 			}
@@ -2794,8 +2739,7 @@ void draw(void)
 
 	drawregion(0, 0, term.col, term.row);
 	if (term.scr == 0)
-		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx], term.ocx,
-			    term.ocy, term.line[term.ocy][term.ocx],
+		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx], term.ocx, term.ocy, term.line[term.ocy][term.ocx],
 			    term.line[term.ocy], term.col);
 	/* xdrawcursor(cx, term.c.y, term.line[term.c.y][cx], */
 	/* 		term.ocx, term.ocy, term.line[term.ocy][term.ocx], */
