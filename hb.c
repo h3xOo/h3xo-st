@@ -2,7 +2,6 @@
 #include <X11/cursorfont.h>
 #include <hb-ft.h>
 #include <hb.h>
-#include <math.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,10 +12,10 @@
 #include "hb.h"
 /* clang-format on */
 
-#define FEATURE(c1, c2, c3, c4)                                                \
-	{                                                                      \
-		.tag = HB_TAG(c1, c2, c3, c4), .value = 1,                     \
-		.start = HB_FEATURE_GLOBAL_START, .end = HB_FEATURE_GLOBAL_END \
+#define FEATURE(c1, c2, c3, c4)                                                              \
+	{                                                                                    \
+		.tag = HB_TAG(c1, c2, c3, c4), .value = 1, .start = HB_FEATURE_GLOBAL_START, \
+		.end = HB_FEATURE_GLOBAL_END                                                 \
 	}
 #define BUFFER_STEP 256
 
@@ -46,8 +45,7 @@ static RuneBuffer hbrunebuffer = { 0, NULL };
  * e. g.
  * FEATURE('c', 'a', 'l', 't'), FEATURE('d', 'l', 'i', 'g')
  */
-static hb_feature_t features[] = { FEATURE('c', 'a', 'l', 't'),
-				   FEATURE('d', 'l', 'i', 'g') };
+static hb_feature_t features[] = { FEATURE('c', 'a', 'l', 't'), FEATURE('d', 'l', 'i', 'g') };
 
 void hbunloadfonts(void)
 {
@@ -71,9 +69,7 @@ hb_font_t *hbfindfont(XftFont *match)
 	}
 
 	/* Font not found in cache, caching it now. */
-	hbfontcache.fonts = (HbFontMatch *)realloc(
-		hbfontcache.fonts,
-		sizeof(HbFontMatch) * (hbfontcache.capacity + 1));
+	hbfontcache.fonts = (HbFontMatch *)realloc(hbfontcache.fonts, sizeof(HbFontMatch) * (hbfontcache.capacity + 1));
 	if (hbfontcache.fonts == NULL)
 		die("Failed to realloc HbFontCache fonts.");
 	FT_Face face = XftLockFace(match);
@@ -88,8 +84,7 @@ hb_font_t *hbfindfont(XftFont *match)
 	return font;
 }
 
-void hbtransform(HbTransformData *data, XftFont *xfont, Glyph const *glyphs,
-		 int start, int length)
+void hbtransform(HbTransformData *data, XftFont *xfont, Glyph const *glyphs, int start, int length)
 {
 	ushort mode = USHRT_MAX;
 	unsigned int glyph_count;
@@ -106,18 +101,14 @@ void hbtransform(HbTransformData *data, XftFont *xfont, Glyph const *glyphs,
 
 	/* Resize the buffer if required length is larger. */
 	if (hbrunebuffer.capacity < length) {
-		hbrunebuffer.capacity =
-			((long)length / BUFFER_STEP + 1) * BUFFER_STEP;
-		hbrunebuffer.runes =
-			(Rune *)realloc(hbrunebuffer.runes,
-					hbrunebuffer.capacity * sizeof(Rune));
+		hbrunebuffer.capacity = ((long)length / BUFFER_STEP + 1) * BUFFER_STEP;
+		hbrunebuffer.runes = (Rune *)realloc(hbrunebuffer.runes, hbrunebuffer.capacity * sizeof(Rune));
 		if (hbrunebuffer.runes == NULL)
 			die("Failed to realloc RuneBuffer runes.");
 	}
 
 	/* Fill buffer with codepoints. */
-	for (rune_idx = 0, glyph_idx = start; glyph_idx < end;
-	     glyph_idx++, rune_idx++) {
+	for (rune_idx = 0, glyph_idx = start; glyph_idx < end; glyph_idx++, rune_idx++) {
 		hbrunebuffer.runes[rune_idx] = glyphs[glyph_idx].u;
 		mode = glyphs[glyph_idx].mode;
 		if (mode & ATTR_WDUMMY)
@@ -126,13 +117,11 @@ void hbtransform(HbTransformData *data, XftFont *xfont, Glyph const *glyphs,
 	hb_buffer_add_codepoints(buffer, hbrunebuffer.runes, length, 0, length);
 
 	/* Shape the segment. */
-	hb_shape(font, buffer, features,
-		 sizeof(features) / sizeof(hb_feature_t));
+	hb_shape(font, buffer, features, sizeof(features) / sizeof(hb_feature_t));
 
 	/* Get new glyph info. */
 	hb_glyph_info_t *info = hb_buffer_get_glyph_infos(buffer, &glyph_count);
-	hb_glyph_position_t *pos =
-		hb_buffer_get_glyph_positions(buffer, &glyph_count);
+	hb_glyph_position_t *pos = hb_buffer_get_glyph_positions(buffer, &glyph_count);
 
 	/* Fill the output. */
 	data->buffer = buffer;
