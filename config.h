@@ -131,57 +131,57 @@ static char const *colorname[] = {
          */
 
 	/* 8 normal colors */
-	// "#282828",
-	// "#cc241d",
-	// "#98971a",
-	// "#d79921",
-	// "#458588",
-	// "#b16286",
-	// "#689d6a",
-	// "#a89984",
-	// "#928374",
+	"#282828",
+	"#cc241d",
+	"#98971a",
+	"#d79921",
+	"#458588",
+	"#b16286",
+	"#689d6a",
+	"#a89984",
+	"#928374",
 
-	// /* 8 bright colors */
-	// "#fb4934",
-	// "#b8bb26",
-	// "#fabd2f",
-	// "#83a598",
-	// "#d3869b",
-	// "#8ec07c",
-	// "#ebdbb2",
+	/* 8 bright colors */
+	"#fb4934",
+	"#b8bb26",
+	"#fabd2f",
+	"#83a598",
+	"#d3869b",
+	"#8ec07c",
+	"#ebdbb2",
 
-	// [255] = 0,
+	[255] = 0,
 
-	// /* more colors can be added after 255 to use with DefaultXX */
-	// "#add8e6", /* 256 -> cursor */
-	// "#555555", /* 257 -> rev cursor*/
+	/* more colors can be added after 255 to use with DefaultXX */
+	"#add8e6", /* 256 -> cursor */
+	"#555555", /* 257 -> rev cursor*/
 
-	// /* Gruvbox */
-	// "#282828", /* 258 -> bg */ /* hard contrast: #1d2021 / soft contrast: #32302f, default:
-	// #282828 */
-	// "#ebdbb2", /* 259 -> fg */
+	/* Gruvbox */
+	"#282828", /* 258 -> bg */ /* hard contrast: #1d2021 / soft contrast: #32302f, default:
+	#282828 */
+	"#ebdbb2", /* 259 -> fg */
 
 	/*
          * Kanagawa default colors
          */
 
 	/* 8 normal colors */
-	"#090618", "#c34043", "#76946a", "#c0a36e", "#7e9cd8", "#957fb8",
-	"#6a9589", "#c8c093",
-
-	/* 8 bright colors */
-	"#727169", "#e82626", "#98bb6c", "#e6c384", "#7fb4ca", "#938aa9",
-	"#7aa89f", "#dcd7ba",
-
-	[255] = 0,
-
-	/* more colors can be added after 255 to use with DefaultXX */
-	"#c8c093", /* 256 -> cursor */
-	"#2d4f67", /* 257 -> rev cursor*/
-
-	/* Kanagawa */
-	"#1f1f28", /* 258 -> bg */
-	"#dcd7ba", /* 259 -> fg */
+	// "#090618", "#c34043", "#76946a", "#c0a36e", "#7e9cd8", "#957fb8",
+	// "#6a9589", "#c8c093",
+	//
+	// /* 8 bright colors */
+	// "#727169", "#e82626", "#98bb6c", "#e6c384", "#7fb4ca", "#938aa9",
+	// "#7aa89f", "#dcd7ba",
+	//
+	// [255] = 0,
+	//
+	// /* more colors can be added after 255 to use with DefaultXX */
+	// "#c8c093", /* 256 -> cursor */
+	// "#2d4f67", /* 257 -> rev cursor*/
+	//
+	// /* Kanagawa */
+	// "#1f1f28", /* 258 -> bg */
+	// "#dcd7ba", /* 259 -> fg */
 };
 
 static unsigned int const defaultitalic = 7;
