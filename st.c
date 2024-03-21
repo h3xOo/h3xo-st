@@ -2490,11 +2490,11 @@ void tputc(Rune u)
 
 	control = ISCONTROL(u);
 	if (u < 127 || !IS_SET(MODE_UTF8)) {
-		c[0] = u;
+		c[0] = (char)u;
 		width = len = 1;
 	} else {
 		len = utf8encode(u, c);
-		if (!control && (width = wcwidth(u)) == -1)
+		if (!control && (width = wcwidth((char)u)) == -1)
 			width = 1;
 	}
 
@@ -2559,7 +2559,7 @@ check_control_code:
 		return;
 	} else if (term.esc & ESC_START) {
 		if (term.esc & ESC_CSI) {
-			csiescseq.buf[csiescseq.len++] = u;
+			csiescseq.buf[csiescseq.len++] = (char)u;
 			if (BETWEEN(u, 0x40, 0x7E) ||
 			    csiescseq.len >= sizeof(csiescseq.buf) - 1) {
 				term.esc = 0;
@@ -2567,12 +2567,13 @@ check_control_code:
 				csihandle();
 			}
 			return;
-		} else if (term.esc & ESC_UTF8) {
-			tdefutf8(u);
+		}
+		if (term.esc & ESC_UTF8) {
+			tdefutf8((char)u);
 		} else if (term.esc & ESC_ALTCHARSET) {
-			tdeftran(u);
+			tdeftran((char)u);
 		} else if (term.esc & ESC_TEST) {
-			tdectest(u);
+			tdectest((char)u);
 		} else {
 			if (!eschandle(u))
 				return;
