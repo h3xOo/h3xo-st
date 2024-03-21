@@ -33,8 +33,7 @@ void boxdraw_xinit(Display *dpy, Colormap cmap, XftDraw *draw, Visual *vis)
 int isboxdraw(Rune u)
 {
 	Rune block = u & ~0xff;
-	return (boxdraw && block == 0x2500 && boxdata[(uint8_t)u]) ||
-	       (boxdraw_braille && block == 0x2800);
+	return (boxdraw && block == 0x2500 && boxdata[(uint8_t)u]) || (boxdraw_braille && block == 0x2800);
 }
 
 /* the "index" is actually the entire shape data encoded as ushort */
@@ -47,8 +46,7 @@ ushort boxdrawindex(Glyph const *g)
 	return boxdata[(uint8_t)g->u];
 }
 
-void drawboxes(int x, int y, int cw, int ch, XftColor *fg, XftColor *bg,
-	       XftGlyphFontSpec const *specs, int len)
+void drawboxes(int x, int y, int cw, int ch, XftColor *fg, XftColor *bg, XftGlyphFontSpec const *specs, int len)
 {
 	for (; len-- > 0; x += cw, specs++)
 		drawbox(x, y, cw, ch, fg, bg, (ushort)specs->glyph);
@@ -95,10 +93,8 @@ void drawbox(int x, int y, int w, int h, XftColor *fg, XftColor *bg, ushort bd)
 		XRenderColor xrc = { .alpha = 0xffff };
 
 		xrc.red = DIV(fg->color.red * d + bg->color.red * (4 - d), 4);
-		xrc.green =
-			DIV(fg->color.green * d + bg->color.green * (4 - d), 4);
-		xrc.blue =
-			DIV(fg->color.blue * d + bg->color.blue * (4 - d), 4);
+		xrc.green = DIV(fg->color.green * d + bg->color.green * (4 - d), 4);
+		xrc.blue = DIV(fg->color.blue * d + bg->color.blue * (4 - d), 4);
 
 		XftColorAllocValue(xdpy, xvis, xcmap, &xrc, &xfc);
 		XftDrawRect(xd, &xfc, x, y, w, h);
@@ -193,18 +189,14 @@ void drawboxlines(int x, int y, int w, int h, XftColor *fg, ushort bd)
 		if (dr) {
 			int p = du ? -s : 0;
 			int n = dd ? -s : du ? s : 0;
-			XftDrawRect(xd, fg, x + w2 - p, y + h2 - s, w - w2 + p,
-				    s);
-			XftDrawRect(xd, fg, x + w2 - n, y + h2 + s, w - w2 + n,
-				    s);
+			XftDrawRect(xd, fg, x + w2 - p, y + h2 - s, w - w2 + p, s);
+			XftDrawRect(xd, fg, x + w2 - n, y + h2 + s, w - w2 + n, s);
 		}
 		if (dd) {
 			int p = dr ? -s : 0;
 			int n = dl ? -s : dr ? s : 0;
-			XftDrawRect(xd, fg, x + w2 + s, y + h2 - p, s,
-				    h - h2 + p);
-			XftDrawRect(xd, fg, x + w2 - s, y + h2 - n, s,
-				    h - h2 + n);
+			XftDrawRect(xd, fg, x + w2 + s, y + h2 - p, s, h - h2 + p);
+			XftDrawRect(xd, fg, x + w2 - s, y + h2 - n, s, h - h2 + n);
 		}
 	}
 }

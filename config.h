@@ -15,15 +15,12 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-static char const *font =
-	"JetBrainsMono Nerd Font:pixelsize=20:antialias=true:autohint=true";
+static char const *font = "JetBrainsMono Nerd Font:pixelsize=20:antialias=true:autohint=true";
 /* static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true"; */
 /* static char* font = "SauceCodePro Nerd Font:pixelsize=20:antialias=true:autohint=true"; */
 /* static char* font = "FiraCode:pixelsize=20:antialias=true:autohint=true"; */
-static char *font2[] = {
-	"Hack Nerd Font Mono:pixelsize=16:antialias=true:autohint=true",
-	"JoyPixels:pixelsize=16:antialias=true:autohint=true"
-};
+static char *font2[] = { "Hack Nerd Font Mono:pixelsize=16:antialias=true:autohint=true",
+			 "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
 static int borderpx = 4;
 
 /*
@@ -131,24 +128,10 @@ static char const *colorname[] = {
          */
 
 	/* 8 normal colors */
-	"#282828",
-	"#cc241d",
-	"#98971a",
-	"#d79921",
-	"#458588",
-	"#b16286",
-	"#689d6a",
-	"#a89984",
-	"#928374",
+	"#282828", "#cc241d", "#98971a", "#d79921", "#458588", "#b16286", "#689d6a", "#a89984", "#928374",
 
 	/* 8 bright colors */
-	"#fb4934",
-	"#b8bb26",
-	"#fabd2f",
-	"#83a598",
-	"#d3869b",
-	"#8ec07c",
-	"#ebdbb2",
+	"#fb4934", "#b8bb26", "#fabd2f", "#83a598", "#d3869b", "#8ec07c", "#ebdbb2",
 
 	[255] = 0,
 
@@ -159,7 +142,7 @@ static char const *colorname[] = {
 	/* Gruvbox */
 	"#282828", /* 258 -> bg */ /* hard contrast: #1d2021 / soft contrast: #32302f, default:
 	#282828 */
-	"#ebdbb2", /* 259 -> fg */
+	"#ebdbb2",		   /* 259 -> fg */
 
 	/*
          * Kanagawa default colors
@@ -277,11 +260,11 @@ static ResourcePref const resources[] = {
 static MouseShortcut const mshortcuts[] = {
 	/* mask                 button   function        argument       release */
 	{ XK_NO_MOD, Button4, kscrollup, { .i = 1 } },
-	{ XK_NO_MOD, Button5, kscrolldown, { .i = 1 } },
+	   { XK_NO_MOD, Button5, kscrolldown, { .i = 1 } },
 	{ XK_ANY_MOD, Button2, selpaste, { .i = 0 }, 1 },
-	{ ShiftMask, Button4, ttysend, { .s = "\033[5;2~" } },
+	   { ShiftMask, Button4, ttysend, { .s = "\033[5;2~" } },
 	{ XK_ANY_MOD, Button4, ttysend, { .s = "\031" } },
-	{ ShiftMask, Button5, ttysend, { .s = "\033[6;2~" } },
+	   { ShiftMask, Button5, ttysend, { .s = "\033[6;2~" } },
 	{ XK_ANY_MOD, Button5, ttysend, { .s = "\005" } },
 };
 
@@ -289,12 +272,9 @@ static MouseShortcut const mshortcuts[] = {
 #define MODKEY	Mod1Mask	       /* left alt */
 #define TERMMOD (Mod1Mask | ShiftMask) /* left alt + shift */
 
-static char const *openurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -o",
-				    "externalpipe", NULL };
-static char const *copyurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -c",
-				    "externalpipe", NULL };
-static char const *copyoutput[] = { "/bin/sh", "-c", "st-copyout",
-				    "externalpipe", NULL };
+static char const *openurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -o", "externalpipe", NULL };
+static char const *copyurlcmd[] = { "/bin/sh", "-c", "st-urlhandler -c", "externalpipe", NULL };
+static char const *copyoutput[] = { "/bin/sh", "-c", "st-copyout", "externalpipe", NULL };
 
 static Shortcut const shortcuts[] = {
 	/* mask                 keysym          function        argument */
