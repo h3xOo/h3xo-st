@@ -6,10 +6,10 @@
 #include <hb.h>
 
 typedef struct {
-	hb_buffer_t *buffer;
-	hb_glyph_info_t *glyphs;
-	hb_glyph_position_t *positions;
-	unsigned int count;
+        hb_buffer_t *buffer;
+        hb_glyph_info_t *glyphs;
+        hb_glyph_position_t *positions;
+        unsigned int count;
 } HbTransformData;
 
 void hbunloadfonts(void);
