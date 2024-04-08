@@ -1717,6 +1717,9 @@ void xseticontitle(char *p)
 	XTextProperty prop;
 	DEFAULT(p, opt_title);
 
+        if (p[0] == '\0')
+                p = opt_title;
+
 	if (Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle, &prop) != Success)
 		return;
 	XSetWMIconName(xw.dpy, xw.win, &prop);
@@ -1735,6 +1738,10 @@ void xfreetitlestack(void)
 void xsettitle(char *p, int pop)
 {
 	XTextProperty prop;
+        DEFAULT(p, opt_title);
+
+        if (p[0] == '\0')
+                p = opt_title;
 
 	free(titlestack[tstki]);
 	if (pop) {
