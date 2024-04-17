@@ -2123,7 +2123,7 @@ void run(void)
         }
 }
 
-int resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
+int resource_load(XrmDatabase db, char const *name, enum resource_type rtype, void *dst)
 {
         char **sdst = dst;
         int *idst = dst;
@@ -2160,7 +2160,7 @@ void config_init(void)
 {
         char *resm;
         XrmDatabase db;
-        ResourcePref *p;
+        ResourcePref const *p;
 
         XrmInitialize();
         resm = XResourceManagerString(xw.dpy);
