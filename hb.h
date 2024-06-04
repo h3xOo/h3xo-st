@@ -5,6 +5,10 @@
 #include <hb-ft.h>
 #include <hb.h>
 
+// clang-format off
+#include "st.h"
+// clang-format on
+
 typedef struct {
         hb_buffer_t *buffer;
         hb_glyph_info_t *glyphs;
