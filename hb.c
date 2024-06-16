@@ -100,7 +100,7 @@ void hbtransform(HbTransformData *data, XftFont *xfont, Glyph const *glyphs, int
         hb_buffer_set_cluster_level(buffer, HB_BUFFER_CLUSTER_LEVEL_MONOTONE_CHARACTERS);
 
         /* Resize the buffer if required length is larger. */
-        if (hbrunebuffer.capacity < length) {
+        if (hbrunebuffer.capacity < (size_t)length) {
                 hbrunebuffer.capacity = ((long)length / BUFFER_STEP + 1) * BUFFER_STEP;
                 hbrunebuffer.runes = (Rune *)realloc(hbrunebuffer.runes, hbrunebuffer.capacity * sizeof(Rune));
                 if (hbrunebuffer.runes == NULL)

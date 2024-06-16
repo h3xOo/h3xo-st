@@ -2439,7 +2439,8 @@ void tputc(Rune u)
 {
         char c[UTF_SIZ];
         int control;
-        int width, len;
+        size_t width;
+        size_t len;
         Glyph *gp;
 
         control = ISCONTROL(u);
@@ -2547,7 +2548,7 @@ check_control_code:
                 if (IS_SET(MODE_WRAP))
                         tnewline(1);
                 else
-                        tmoveto(term.col - width, term.c.y);
+                        tmoveto((int)term.col - width, term.c.y);
                 gp = &term.line[term.c.y][term.c.x];
         }
 
@@ -2591,7 +2592,7 @@ int twrite(char const *buf, int buflen, int show_ctrl)
         for (n = 0; n < buflen; n += charsize) {
                 if (IS_SET(MODE_UTF8)) {
                         /* process a complete utf8 char */
-                        charsize = utf8decode(buf + n, &u, buflen - n);
+                        charsize = (int)utf8decode(buf + n, &u, buflen - n);
                         if (charsize == 0)
                                 break;
                 } else {
@@ -2615,9 +2616,11 @@ int twrite(char const *buf, int buflen, int show_ctrl)
 
 void tresize(int col, int row)
 {
-        int i, j;
+        int i;
+        int j;
         int tmp;
-        int minrow, mincol;
+        int minrow;
+        int mincol;
         int *bp;
         TCursor c;
 
@@ -2729,7 +2732,9 @@ void drawregion(int x1, int y1, int x2, int y2)
 
 void draw(void)
 {
-        int cx = term.c.x, ocx = term.ocx, ocy = term.ocy;
+        int cx = term.c.x;
+        int ocx = term.ocx;
+        int ocy = term.ocy;
 
         if (!xstartdraw())
                 return;

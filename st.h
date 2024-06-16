@@ -4,6 +4,7 @@
 #define ST_H__
 
 #include <stdint.h>
+#include <wchar.h>
 #include <sys/types.h>
 
 /* macros */
