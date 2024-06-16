@@ -15,11 +15,11 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-static char const *font = "JetBrainsMono Nerd Font:pixelsize=20:antialias=true:autohint=true";
+static char const *font = "JetBrainsMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 /* static char* font = "Source Code Pro:pixelsize=20:antialias=true:autohint=true"; */
 /* static char* font = "SauceCodePro Nerd Font:pixelsize=20:antialias=true:autohint=true"; */
 /* static char* font = "FiraCode:pixelsize=20:antialias=true:autohint=true"; */
-static char *font2[] = { "Hack Nerd Font Mono:pixelsize=16:antialias=true:autohint=true", "JoyPixels:pixelsize=16:antialias=true:autohint=true" };
+static char *font2[] = { "Hack Nerd Font Mono:pixelsize=10:antialias=true:autohint=true", "JoyPixels:pixelsize=10:antialias=true:autohint=true" };
 static int borderpx = 4;
 
 /*
