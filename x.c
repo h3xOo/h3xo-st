@@ -161,7 +161,7 @@ typedef struct {
 static inline ushort sixd_to_16bit(int);
 static void xresetfontsettings(ushort mode, Font **font, int *frcflags);
 static int xmakeglyphfontspecs(XftGlyphFontSpec *, Glyph const *, int, int, int);
-static void xdrawglyphfontspecs(XftGlyphFontSpec const *, Glyph, int, int, int, int);
+static void xdrawglyphfontspecs(XftGlyphFontSpec const *, Glyph, int, int, int, int, int);
 static void xdrawglyph(Glyph, int, int);
 static void xclear(int, int, int, int);
 static int xgeommasktogravity(int);
@@ -1340,7 +1340,7 @@ int xmakeglyphfontspecs(XftGlyphFontSpec *specs, Glyph const *glyphs, int len, i
         xresetfontsettings(mode, &font, &frcflags);
 
         for (i = 0, xp = winx, yp = winy + font->ascent; i < len; ++i) {
-                mode = glyphs[i].mode;
+                mode = glyphs[i].mode & ~ATTR_WRAP;
 
                 /* Skip dummy wide-character spacing. */
                 if ((mode & ATTR_WDUMMY) && i < (len - 1))
@@ -1390,8 +1390,7 @@ int xmakeglyphfontspecs(XftGlyphFontSpec *specs, Glyph const *glyphs, int len, i
                                         cluster_yp += shaped.positions[code_idx].y_advance / 64.;
                                         numspecs++;
                                 } else {
-                                        /* If it's not found, try to fetch it through the font
-                                         * cache. */
+                                        /* If it's not found, try to fetch it through the font cache. */
                                         rune = glyphs[start + idx].u;
                                         for (f = 0; f < frclen; f++) {
                                                 glyphidx = XftCharIndex(xw.dpy, frc[f].font, rune);
@@ -1474,9 +1473,8 @@ int xmakeglyphfontspecs(XftGlyphFontSpec *specs, Glyph const *glyphs, int len, i
         return numspecs;
 }
 
-void xdrawglyphfontspecs(XftGlyphFontSpec const *specs, Glyph base, int len, int x, int y, int dmode)
+void xdrawglyphfontspecs(XftGlyphFontSpec const *specs, Glyph base, int len, int x, int y, int charlen, int dmode)
 {
-        int charlen = len * ((base.mode & ATTR_WIDE) ? 2 : 1);
         int winx = win.hborderpx + x * win.cw, winy = win.vborderpx + y * win.ch, width = charlen * win.cw;
         Color *fg, *bg, *temp, revfg, revbg, truefg, truebg;
         XRenderColor colfg, colbg;
@@ -1611,10 +1609,10 @@ void xdrawglyphfontspecs(XftGlyphFontSpec const *specs, Glyph base, int len, int
 void xdrawglyph(Glyph g, int x, int y)
 {
         int numspecs;
-        XftGlyphFontSpec spec;
+        XftGlyphFontSpec *spec = xw.specbuf;
 
-        numspecs = xmakeglyphfontspecs(&spec, &g, 1, x, y);
-        xdrawglyphfontspecs(&spec, g, numspecs, x, y, DRAW_BG | DRAW_FG);
+        numspecs = xmakeglyphfontspecs(spec, &g, 1, x, y);
+        xdrawglyphfontspecs(spec, g, numspecs, x, y, (g.mode & ATTR_WIDE) ? 2 : 1, DRAW_BG | DRAW_FG);
 }
 
 void xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og, Line line, int len)
@@ -1793,7 +1791,7 @@ void xdrawline(Line line, int x1, int y1, int x2)
                                 new.mode ^= ATTR_REVERSE;
                         if ((i > 0) && ATTRCMP(base, new)) {
                                 numspecs = xmakeglyphfontspecs(specs, &line[ox], x - ox, ox, y1);
-                                xdrawglyphfontspecs(specs, base, numspecs, ox, y1, dmode);
+                                xdrawglyphfontspecs(specs, base, numspecs, ox, y1, x - ox, dmode);
                                 i = 0;
                         }
                         if (i == 0) {
@@ -1804,7 +1802,7 @@ void xdrawline(Line line, int x1, int y1, int x2)
                 }
                 if (i > 0) {
                         numspecs = xmakeglyphfontspecs(specs, &line[ox], x2 - ox, ox, y1);
-                        xdrawglyphfontspecs(specs, base, numspecs, ox, y1, dmode);
+                        xdrawglyphfontspecs(specs, base, numspecs, ox, y1, x2 - ox, dmode);
                 }
         }
 }
