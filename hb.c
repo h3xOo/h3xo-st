@@ -48,7 +48,7 @@ static hb_feature_t features[] = { FEATURE('c', 'a', 'l', 't'), FEATURE('d', 'l'
 
 void hbunloadfonts(void)
 {
-        for (int i = 0; i < hbfontcache.capacity; i++) {
+        for (size_t i = 0; i < hbfontcache.capacity; i++) {
                 hb_font_destroy(hbfontcache.fonts[i].font);
                 XftUnlockFace(hbfontcache.fonts[i].match);
         }
@@ -62,7 +62,7 @@ void hbunloadfonts(void)
 
 hb_font_t *hbfindfont(XftFont *match)
 {
-        for (int i = 0; i < hbfontcache.capacity; i++) {
+        for (size_t i = 0; i < hbfontcache.capacity; i++) {
                 if (hbfontcache.fonts[i].match == match)
                         return hbfontcache.fonts[i].font;
         }

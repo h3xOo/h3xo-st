@@ -256,14 +256,15 @@ static ssize_t xwrite(int fd, char const *s, size_t len)
                 s += r;
         }
 
-        return aux;
+        return (ssize_t)aux;
 }
 
 void *xmalloc(size_t len)
 {
         void *p;
 
-        if (!(p = malloc(len)))
+        p = malloc(len);
+        if (p == NULL)
                 die("malloc: %s\n", strerror(errno));
 
         return p;
@@ -271,17 +272,19 @@ void *xmalloc(size_t len)
 
 void *xrealloc(void *p, size_t len)
 {
-        if ((p = realloc(p, len)) == NULL)
+        void *tmp = realloc(p, len);
+        if (tmp == NULL)
                 die("realloc: %s\n", strerror(errno));
+        p = tmp;
 
         return p;
 }
 
 char *xstrdup(char const *s)
 {
-        char *p;
+        char *p = strdup(s);
 
-        if ((p = strdup(s)) == NULL)
+        if (p == NULL)
                 die("strdup: %s\n", strerror(errno));
 
         return p;
@@ -289,7 +292,10 @@ char *xstrdup(char const *s)
 
 static size_t utf8decode(char const *c, Rune *u, size_t clen)
 {
-        size_t i, j, len, type;
+        size_t i;
+        size_t j;
+        size_t len;
+        size_t type;
         Rune udecoded;
 
         *u = UTF_INVALID;
@@ -322,7 +328,8 @@ static Rune utf8decodebyte(char c, size_t *i)
 
 size_t utf8encode(Rune u, char *c)
 {
-        size_t len, i;
+        size_t len;
+        size_t i;
 
         len = utf8validate(&u, 0);
         if (len > UTF_SIZ)
@@ -339,7 +346,7 @@ size_t utf8encode(Rune u, char *c)
 
 static char utf8encodebyte(Rune u, size_t i)
 {
-        return utfbyte[i] | (u & ~utfmask[i]);
+        return (char)(utfbyte[i] | (u & ~utfmask[i]));
 }
 
 static size_t utf8validate(Rune *u, size_t i)
@@ -362,7 +369,8 @@ static char base64dec_getc(char const **src)
 static char *base64dec(char const *src)
 {
         size_t in_len = strlen(src);
-        char *result, *dst;
+        char *result;
+        char *dst;
         static char const base64_digits[256] = { [43] = 62, 0,  0,  0,  63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 0,  0,  0,  -1, 0,
                                                  0,         0,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
                                                  18,        19, 20, 21, 22, 23, 24, 25, 0,  0,  0,  0,  0,  0,  26, 27, 28, 29, 30, 31,
@@ -372,10 +380,10 @@ static char *base64dec(char const *src)
                 in_len += 4 - (in_len % 4);
         result = dst = xmalloc(in_len / 4 * 3 + 1);
         while (*src) {
-                int a = base64_digits[(unsigned char)base64dec_getc(&src)];
-                int b = base64_digits[(unsigned char)base64dec_getc(&src)];
-                int c = base64_digits[(unsigned char)base64dec_getc(&src)];
-                int d = base64_digits[(unsigned char)base64dec_getc(&src)];
+                char a = base64_digits[(unsigned char)base64dec_getc(&src)];
+                char b = base64_digits[(unsigned char)base64dec_getc(&src)];
+                char c = base64_digits[(unsigned char)base64dec_getc(&src)];
+                char d = base64_digits[(unsigned char)base64dec_getc(&src)];
 
                 /* invalid input. 'a' can be -1, e.g. if src is "\n" (c-str) */
                 if (a == -1 || b == -1)
@@ -444,7 +452,11 @@ void selstart(int col, int row, int snap)
 
 void selextend(int col, int row, int type, int done)
 {
-        int oldey, oldex, oldsby, oldsey, oldtype;
+        int oldey;
+        int oldex;
+        int oldsby;
+        int oldsey;
+        int oldtype;
 
         if (sel.mode == SEL_IDLE)
                 return;
@@ -510,9 +522,14 @@ int selected(int x, int y)
 
 static void selsnap(int *x, int *y, int direction)
 {
-        int newx, newy, xt, yt;
-        int delim, prevdelim;
-        Glyph const *gp, *prevgp;
+        int newx;
+        int newy;
+        int xt;
+        int yt;
+        int delim;
+        int prevdelim;
+        Glyph const *gp;
+        Glyph *prevgp;
 
         switch (sel.snap) {
         case SNAP_WORD:
@@ -991,10 +1008,7 @@ void treset(void)
 {
         uint i;
 
-        term.c = (TCursor) {
-                {.mode = ATTR_NULL, .fg = defaultfg, .bg = defaultbg},
-                .x = 0, .y = 0, .state = CURSOR_DEFAULT
-        };
+        term.c = (TCursor) { { .mode = ATTR_NULL, .fg = defaultfg, .bg = defaultbg }, .x = 0, .y = 0, .state = CURSOR_DEFAULT };
 
         memset(term.tabs, 0, term.col * sizeof(*term.tabs));
         for (i = tabspaces; i < term.col; i += tabspaces)
@@ -1370,7 +1384,8 @@ void tsetattr(int const *attr, int l)
         for (i = 0; i < l; i++) {
                 switch (attr[i]) {
                 case 0:
-                        term.c.attr.mode &= ~(ATTR_BOLD | ATTR_FAINT | ATTR_ITALIC | ATTR_UNDERLINE | ATTR_BLINK | ATTR_REVERSE | ATTR_INVISIBLE | ATTR_STRUCK);
+                        term.c.attr.mode &= ~(ATTR_BOLD | ATTR_FAINT | ATTR_ITALIC | ATTR_UNDERLINE | ATTR_BLINK | ATTR_REVERSE |
+                                              ATTR_INVISIBLE | ATTR_STRUCK);
                         term.c.attr.fg = defaultfg;
                         term.c.attr.bg = defaultbg;
                         break;
@@ -1888,7 +1903,8 @@ void osc_color_response(int num, int index, int is_osc4)
 
         n = snprintf(buf, sizeof buf, "\033]%s%d;rgb:%02x%02x/%02x%02x/%02x%02x\007", is_osc4 ? "4;" : "", num, r, r, g, g, b, b);
         if (n < 0 || n >= sizeof(buf)) {
-                fprintf(stderr, "error: %s while printing %s response\n", n < 0 ? "snprintf failed" : "truncation occurred", is_osc4 ? "osc4" : "osc");
+                fprintf(stderr, "error: %s while printing %s response\n", n < 0 ? "snprintf failed" : "truncation occurred",
+                        is_osc4 ? "osc4" : "osc");
         } else {
                 ttywrite(buf, n, 1);
         }
@@ -1901,11 +1917,7 @@ void strhandle(void)
         const struct {
                 int idx;
                 char *str;
-        } osc_table[] = {
-                {defaultfg, "foreground"},
-                {defaultbg, "background"},
-                {defaultcs,     "cursor"}
-        };
+        } osc_table[] = { { defaultfg, "foreground" }, { defaultbg, "background" }, { defaultcs, "cursor" } };
 
         term.esc &= ~(ESC_STR_END | ESC_STR);
         strescseq.buf[strescseq.len] = '\0';
@@ -2732,10 +2744,8 @@ void draw(void)
 
         drawregion(0, 0, term.col, term.row);
         if (term.scr == 0)
-                xdrawcursor(cx, term.c.y, term.line[term.c.y][cx], term.ocx, term.ocy, term.line[term.ocy][term.ocx], term.line[term.ocy], term.col);
-        /* xdrawcursor(cx, term.c.y, term.line[term.c.y][cx], */
-        /* 		term.ocx, term.ocy, term.line[term.ocy][term.ocx], */
-        /* 		term.line[term.ocy], term.col); */
+                xdrawcursor(cx, term.c.y, term.line[term.c.y][cx], term.ocx, term.ocy, term.line[term.ocy][term.ocx], term.line[term.ocy],
+                            term.col);
         term.ocx = cx;
         term.ocy = term.c.y;
         xfinishdraw();
