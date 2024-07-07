@@ -53,10 +53,8 @@ void hbunloadfonts(void)
                 XftUnlockFace(hbfontcache.fonts[i].match);
         }
 
-        if (hbfontcache.fonts != NULL) {
-                free(hbfontcache.fonts);
-                hbfontcache.fonts = NULL;
-        }
+        free(hbfontcache.fonts);
+        hbfontcache.fonts = NULL;
         hbfontcache.capacity = 0;
 }
 
