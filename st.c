@@ -275,9 +275,8 @@ void *xrealloc(void *p, size_t len)
         void *tmp = realloc(p, len);
         if (tmp == NULL)
                 die("realloc: %s\n", strerror(errno));
-        p = tmp;
 
-        return p;
+        return tmp;
 }
 
 char *xstrdup(char const *s)
